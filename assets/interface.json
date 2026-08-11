@@ -45,6 +45,9 @@
     "option": {
         "救救孩子": {
             "type": "switch",
+            "label": "救救孩子",
+            "description": "全部失败后在工会频道发送救救孩子",
+            "default_case": "Yes",
             "cases": [
                 {
                     "name": "Yes",
