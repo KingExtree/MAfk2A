@@ -1,10 +1,18 @@
+"""
+MAFK2A 自定义识别
+"""
 from maa.agent.agent_server import AgentServer
 from maa.custom_recognition import CustomRecognition
 from maa.context import Context
 
 
-@AgentServer.custom_recognition("my_reco_222")
-class MyRecongition(CustomRecognition):
+@AgentServer.custom_recognition("CheckBattleResult")
+class CheckBattleResult(CustomRecognition):
+    """
+    战斗结束后判断胜负。
+    先检查胜利画面特征，再检查失败画面特征。
+    返回结果中 detail 为 "victory" 或 "defeat"。
+    """
 
     def analyze(
         self,
@@ -12,26 +20,29 @@ class MyRecongition(CustomRecognition):
         argv: CustomRecognition.AnalyzeArg,
     ) -> CustomRecognition.AnalyzeResult:
 
-        reco_detail = context.run_recognition(
-            "MyCustomOCR",
-            argv.image,
-            pipeline_override={"MyCustomOCR": {"roi": [100, 100, 200, 300]}},
-        )
+        # 先检查胜利标识
+        victory = context.run_recognition("VictoryIndicator", argv.image)
+        print(f"[CheckBattleResult] VictoryIndicator box={victory.box}, detail={victory.detail}")
+        if victory.box:
+            print("[CheckBattleResult] 胜利!")
+            # 路由到胜利处理
+            context.override_next(argv.node_name, ["HandleVictory"])
+            return CustomRecognition.AnalyzeResult(
+                box=victory.box, detail="victory"
+            )
 
-        # context is a reference, will override the pipeline for whole task
-        context.override_pipeline({"MyCustomOCR": {"roi": [1, 1, 114, 514]}})
-        # context.run_recognition ...
+        # 再检查失败标识
+        defeat = context.run_recognition("DefeatIndicator", argv.image)
+        print(f"[CheckBattleResult] DefeatIndicator box={defeat.box}, detail={defeat.detail}")
+        if defeat.box:
+            print("[CheckBattleResult] 失败!")
+            context.override_next(argv.node_name, ["HandleDefeat"])
+            return CustomRecognition.AnalyzeResult(
+                box=defeat.box, detail="defeat"
+            )
 
-        # make a new context to override the pipeline, only for itself
-        new_context = context.clone()
-        new_context.override_pipeline({"MyCustomOCR": {"roi": [100, 200, 300, 400]}})
-        reco_detail = new_context.run_recognition("MyCustomOCR", argv.image)
-
-        click_job = context.tasker.controller.post_click(10, 20)
-        click_job.wait()
-
-        context.override_next(argv.node_name, ["TaskA", "TaskB"])
-
+        # 都没识别到，继续等待
+        print("[CheckBattleResult] 战斗中...继续等待")
         return CustomRecognition.AnalyzeResult(
-            box=(0, 0, 100, 100), detail="Hello World!"
+            box=(0, 0, 0, 0), detail="waiting"
         )

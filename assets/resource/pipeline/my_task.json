@@ -1,12 +1,44 @@
 {
-    "MyTask1": {},
-    "MyTask2": {},
-    "MyTask3": {},
-    "MyTask4": {
-        "recognition": "Custom",
-        "custom_recognition": "my_reco_222",
-        "action": "Custom",
-        "custom_action": "my_action_111"
+    "CollectAFK": {
+        "next": [
+            "FindChest"
+        ]
     },
-    "OcrTask": {}
+    "FindChest": {
+        "recognition": "TemplateMatch",
+        "template": "guaji.png",
+        "roi": [
+            0,
+            1177,
+            128,
+            104
+        ],
+        "action": "Click",
+        "next": [
+            "ClaimReward"
+        ],
+        "timeout": 5000,
+        "post_delay": 1000
+    },
+    "ClaimReward": {
+        "action": "Click",
+        "target": [
+            340,
+            900
+        ],
+        "next": [
+            "CloseReward"
+        ],
+        "timeout": 5000,
+        "post_delay": 1000
+    },
+    "CloseReward": {
+        "action": "Click",
+        "target": [
+            340,
+            700
+        ],
+        "next": [],
+        "post_delay": 500
+    }
 }

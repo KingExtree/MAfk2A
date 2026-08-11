@@ -1,14 +1,16 @@
+import os
 import sys
 
 from maa.agent.agent_server import AgentServer
-from maa.toolkit import Toolkit
 
 import my_action
 import my_reco
 
 
 def main():
-    Toolkit.init_option("./")
+    # 切换到项目根目录，防止管理员权限下 CWD 不正确
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(project_root)
 
     if len(sys.argv) < 2:
         print("Usage: python main.py <socket_id>")
