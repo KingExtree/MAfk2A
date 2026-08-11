@@ -158,26 +158,60 @@ jobs:
           esac
           mkdir -p "$SITE_PACKAGES"
 
-          # Install uv for reliable cross-platform package resolution
-          python -m pip install uv
+          # Map OS/arch to pip platform tag (for pip download)
+          case "${{ matrix.os }}-${{ matrix.arch }}" in
+            win-x86_64)    PIP_PLATFORM="win_amd64"              ;;
+            win-aarch64)   PIP_PLATFORM="win_arm64"              ;;
+            macos-x86_64)  PIP_PLATFORM="macosx_13_0_x86_64"     ;;
+            macos-aarch64) PIP_PLATFORM="macosx_13_0_arm64"      ;;
+            linux-x86_64)  PIP_PLATFORM="manylinux2014_x86_64"   ;;
+            linux-aarch64) PIP_PLATFORM="manylinux2014_aarch64"  ;;
+          esac
 
-          echo "Installing maa for platform: $TARGET (Python $PY_MAJOR_MINOR)"
-          uv pip install --target "$SITE_PACKAGES" \
-            --python-platform "$TARGET" \
+          WHEEL_DIR="/tmp/maafw-wheels"
+          mkdir -p "$WHEEL_DIR"
+
+          echo "Downloading maafw wheels for platform: $PIP_PLATFORM (Python $PY_MAJOR_MINOR)"
+          python -m pip download \
+            --platform "$PIP_PLATFORM" \
             --python-version "$PY_MAJOR_MINOR" \
             --only-binary :all: \
-            maa 2>&1 || {
+            --dest "$WHEEL_DIR" \
+            maafw 2>&1 || {
               echo "Retrying without --only-binary..."
-              uv pip install --target "$SITE_PACKAGES" \
-                --python-platform "$TARGET" \
+              python -m pip download \
+                --platform "$PIP_PLATFORM" \
                 --python-version "$PY_MAJOR_MINOR" \
-                maa
+                --dest "$WHEEL_DIR" \
+                maafw
             }
 
-          # Verify maa was actually installed
+          echo "Downloaded wheels:"
+          ls -la "$WHEEL_DIR/"
+
+          # Extract all .whl files directly to site-packages (whl is just a zip)
+          echo "Extracting wheels to: $SITE_PACKAGES"
+          python -c "
+import zipfile, os, glob
+for whl in sorted(glob.glob('$WHEEL_DIR/*.whl')):
+    name = os.path.basename(whl)
+    with zipfile.ZipFile(whl, 'r') as z:
+        z.extractall('$SITE_PACKAGES')
+    print(f'  Extracted: {name}')
+print('Done.')
+"
+
+          # Verify maa module was properly installed with all submodules
           echo "Verifying maa installation in: $SITE_PACKAGES"
           if [ -d "$SITE_PACKAGES/maa" ]; then
-            echo "maa package found: $(ls "$SITE_PACKAGES/maa/" | head -10)"
+            echo "maa package found:"
+            ls "$SITE_PACKAGES/maa/"
+            if [ -d "$SITE_PACKAGES/maa/agent" ]; then
+              echo "  maa.agent submodule: OK"
+            else
+              echo "  ERROR: maa.agent submodule MISSING"
+              exit 1
+            fi
           else
             echo "ERROR: maa package NOT found in $SITE_PACKAGES"
             echo "Directory contents:"
@@ -185,8 +219,7 @@ jobs:
             exit 1
           fi
 
-          echo "Python ${PYTHON_VERSION} bundled with maa successfully"
-          ls install/python/
+          echo "Python ${PYTHON_VERSION} bundled with maafw successfully"
 
       - name: Install
         shell: bash
