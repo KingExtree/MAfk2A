@@ -66,7 +66,7 @@ def _update_try_formation(context: Context, formation_index: int, mode: str):
 
 
 # =============================================
-# 自定义动作
+# 自定义动作1
 # =============================================
 
 @AgentServer.custom_action("CampaignInit")
