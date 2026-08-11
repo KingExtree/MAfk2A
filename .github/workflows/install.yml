@@ -145,8 +145,17 @@ jobs:
           rm python.tar.gz
 
           # Determine site-packages path
+          # Windows: Lib/site-packages (no version subdir)
+          # Linux/macOS: lib/python3.12/site-packages
           PY_MAJOR_MINOR=$(echo $PYTHON_VERSION | cut -d. -f1,2)
-          SITE_PACKAGES="install/python/lib/python${PY_MAJOR_MINOR}/site-packages"
+          case "${{ matrix.os }}" in
+            win)
+              SITE_PACKAGES="install/python/Lib/site-packages"
+              ;;
+            *)
+              SITE_PACKAGES="install/python/lib/python${PY_MAJOR_MINOR}/site-packages"
+              ;;
+          esac
           mkdir -p "$SITE_PACKAGES"
 
           # Map to pip platform tag
@@ -173,6 +182,17 @@ jobs:
                 --no-compile \
                 maa
             }
+
+          # Verify maa was actually installed
+          echo "Verifying maa installation in: $SITE_PACKAGES"
+          if [ -d "$SITE_PACKAGES/maa" ]; then
+            echo "maa package found: $(ls "$SITE_PACKAGES/maa/" | head -10)"
+          else
+            echo "ERROR: maa package NOT found in $SITE_PACKAGES"
+            echo "Directory contents:"
+            ls -la "$SITE_PACKAGES/" 2>/dev/null || echo "(empty or missing)"
+            exit 1
+          fi
 
           echo "Python ${PYTHON_VERSION} bundled with maa successfully"
           ls install/python/
