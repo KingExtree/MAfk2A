@@ -158,28 +158,19 @@ jobs:
           esac
           mkdir -p "$SITE_PACKAGES"
 
-          # Map to pip platform tag
-          case "${{ matrix.os }}-${{ matrix.arch }}" in
-            win-x86_64)    PIP_PLATFORM="win_amd64"           ;;
-            win-aarch64)   PIP_PLATFORM="win_arm64"           ;;
-            macos-x86_64)  PIP_PLATFORM="macosx_10_9_x86_64"  ;;
-            macos-aarch64) PIP_PLATFORM="macosx_11_0_arm64"   ;;
-            linux-x86_64)  PIP_PLATFORM="manylinux_2_17_x86_64"   ;;
-            linux-aarch64) PIP_PLATFORM="manylinux_2_17_aarch64"  ;;
-          esac
+          # Install uv for reliable cross-platform package resolution
+          python -m pip install uv
 
-          echo "Installing maa for platform: $PIP_PLATFORM (Python $PY_MAJOR_MINOR)"
-          pip install --target "$SITE_PACKAGES" \
-            --platform "$PIP_PLATFORM" \
+          echo "Installing maa for platform: $TARGET (Python $PY_MAJOR_MINOR)"
+          uv pip install --target "$SITE_PACKAGES" \
+            --python-platform "$TARGET" \
             --python-version "$PY_MAJOR_MINOR" \
             --only-binary :all: \
-            --no-compile \
             maa 2>&1 || {
               echo "Retrying without --only-binary..."
-              pip install --target "$SITE_PACKAGES" \
-                --platform "$PIP_PLATFORM" \
+              uv pip install --target "$SITE_PACKAGES" \
+                --python-platform "$TARGET" \
                 --python-version "$PY_MAJOR_MINOR" \
-                --no-compile \
                 maa
             }
 
