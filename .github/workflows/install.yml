@@ -191,15 +191,7 @@ jobs:
 
           # Extract all .whl files directly to site-packages (whl is just a zip)
           echo "Extracting wheels to: $SITE_PACKAGES"
-          python -c "
-import zipfile, os, glob
-for whl in sorted(glob.glob('$WHEEL_DIR/*.whl')):
-    name = os.path.basename(whl)
-    with zipfile.ZipFile(whl, 'r') as z:
-        z.extractall('$SITE_PACKAGES')
-    print(f'  Extracted: {name}')
-print('Done.')
-"
+          python -c "import zipfile,os,glob;[zipfile.ZipFile(w).extractall('${SITE_PACKAGES}') or print('Extracted:',os.path.basename(w)) for w in sorted(glob.glob('${WHEEL_DIR}/*.whl'))];print('Done.')"
 
           # Verify maa module was properly installed with all submodules
           echo "Verifying maa installation in: $SITE_PACKAGES"
