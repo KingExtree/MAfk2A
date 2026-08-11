@@ -1,21 +1,12 @@
 {
-    // 本文件主要定义了通用 UI 的行为和显示内容
-    // 可参考文档和示例添加更多您需要的功能
-    // 文档：https://maafw.xyz/docs/3.3-ProjectInterfaceV2
-    // 示例：https://github.com/MaaXYZ/MaaFramework/blob/main/sample/interface.json
     "interface_version": 2,
     "name": "MAFK2A",
-    "description": "这是一个使用 MaaFramework 创建的新项目。",
+    "description": "剑与远征：启程",
     "contact": "",
     "license": "MIT",
-    "welcome": "首次使用！欢迎使用 MAA!",
-    // 填写项目地址和版本号可实现自动更新功能
+    "welcome": "欢迎使用 MAFK2A！",
     "github": "https://github.com/KingExtree/MAfk2A",
     "version": "1.0.0",
-    // Mirror酱为第三方分发服务，新项目默认关闭
-    // 若有需要请联系 Mirror酱 开通，直接自行开启是无法使用的
-    // "mirrorchyan_rid": "MaaXXX",
-    // "mirrorchyan_multiplatform": true,
     "controller": [
         {
             "name": "桌面端",
@@ -23,12 +14,9 @@
             "win32": {
                 "class_regex": ".*",
                 "window_regex": "剑与远征：启程",
-                // "window_regex": "战网",
-                // 截图及控制方式，请根据项目实际情况修改
-                // 文档: https://maafw.xyz/docs/2.4-ControlMethods
-                "screencap": "Background", // 截图方式
-                "mouse": "SendMessageWithCursorPos", // 鼠标控制方式
-                "keyboard": "PostMessageWithCursorPos" // 键盘控制方式
+                "screencap": "Background",
+                "mouse": "SendMessageWithWindowPos",
+                "keyboard": "PostMessageWithWindowPos"
             }
         }
     ],
@@ -43,36 +31,44 @@
     "agent": {
         "child_exec": "python.exe",
         "child_args": [
-            "d:/文档/MAFK2A/MAfk2A/agent/main.py"
+            "agent/main.py"
         ]
     },
     "task": [
         {
             "name": "自动推挂机关卡",
+            "label": "自动推关",
+            "description": "自动推关，依次尝试所有作业，先幻灵后普通",
             "entry": "AutoCampaign"
         }
-    ]
-    // "option": {
-    //     "任务选项1": {
-    //         "type": "select",
-    //         "cases": [
-    //             {
-    //                 "name": "文本1",
-    //                 "pipeline_override": {
-    //                     "OcrTask": {
-    //                         "text": "文本1"
-    //                     }
-    //                 }
-    //             },
-    //             {
-    //                 "name": "文本2",
-    //                 "pipeline_override": {
-    //                     "OcrTask": {
-    //                         "text": "文本2"
-    //                     }
-    //                 }
-    //             }
-    //         ]
-    //     }
-    // }
+    ],
+    "option": {
+        "救救孩子": {
+            "type": "switch",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "开启",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "send_help": "True"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "关闭",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "send_help": "False"
+                            }
+                        }
+                    }
+                }
+            ],
+        }
+    }
 }
