@@ -39,7 +39,10 @@
             "name": "自动推挂机关卡",
             "label": "自动推关",
             "description": "自动推关，依次尝试所有作业，先幻灵后普通",
-            "entry": "AutoCampaign"
+            "entry": "AutoCampaign",
+            "option": [
+                "救救孩子"
+            ]
         }
     ],
     "option": {
