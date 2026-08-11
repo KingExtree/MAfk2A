@@ -117,6 +117,66 @@ jobs:
         run: |
           rm -rf MFA/runtimes
       
+      - name: Bundle Python runtime
+        if: matrix.os != 'android'
+        shell: bash
+        run: |
+          PYTHON_VERSION="3.12.12"
+          PYTHON_BUILD_TAG="20260114"
+
+          # Map OS/arch to python-build-standalone target triple
+          case "${{ matrix.os }}-${{ matrix.arch }}" in
+            win-x86_64)    TARGET="x86_64-pc-windows-msvc"     ;;
+            win-aarch64)   TARGET="aarch64-pc-windows-msvc"    ;;
+            macos-x86_64)  TARGET="x86_64-apple-darwin"        ;;
+            macos-aarch64) TARGET="aarch64-apple-darwin"       ;;
+            linux-x86_64)  TARGET="x86_64-unknown-linux-gnu"   ;;
+            linux-aarch64) TARGET="aarch64-unknown-linux-gnu"  ;;
+          esac
+
+          PYTHON_TGZ="cpython-${PYTHON_VERSION}+${PYTHON_BUILD_TAG}-${TARGET}-install_only.tar.gz"
+          DOWNLOAD_URL="https://github.com/astral-sh/python-build-standalone/releases/download/${PYTHON_BUILD_TAG}/${PYTHON_TGZ}"
+
+          echo "Downloading Python: $DOWNLOAD_URL"
+          curl -fSL --retry 3 --connect-timeout 30 -o python.tar.gz "$DOWNLOAD_URL"
+
+          mkdir -p install/python
+          tar -xzf python.tar.gz -C install/python --strip-components=1
+          rm python.tar.gz
+
+          # Determine site-packages path
+          PY_MAJOR_MINOR=$(echo $PYTHON_VERSION | cut -d. -f1,2)
+          SITE_PACKAGES="install/python/lib/python${PY_MAJOR_MINOR}/site-packages"
+          mkdir -p "$SITE_PACKAGES"
+
+          # Map to pip platform tag
+          case "${{ matrix.os }}-${{ matrix.arch }}" in
+            win-x86_64)    PIP_PLATFORM="win_amd64"           ;;
+            win-aarch64)   PIP_PLATFORM="win_arm64"           ;;
+            macos-x86_64)  PIP_PLATFORM="macosx_10_9_x86_64"  ;;
+            macos-aarch64) PIP_PLATFORM="macosx_11_0_arm64"   ;;
+            linux-x86_64)  PIP_PLATFORM="manylinux_2_17_x86_64"   ;;
+            linux-aarch64) PIP_PLATFORM="manylinux_2_17_aarch64"  ;;
+          esac
+
+          echo "Installing maa for platform: $PIP_PLATFORM (Python $PY_MAJOR_MINOR)"
+          pip install --target "$SITE_PACKAGES" \
+            --platform "$PIP_PLATFORM" \
+            --python-version "$PY_MAJOR_MINOR" \
+            --only-binary :all: \
+            --no-compile \
+            maa 2>&1 || {
+              echo "Retrying without --only-binary..."
+              pip install --target "$SITE_PACKAGES" \
+                --platform "$PIP_PLATFORM" \
+                --python-version "$PY_MAJOR_MINOR" \
+                --no-compile \
+                maa
+            }
+
+          echo "Python ${PYTHON_VERSION} bundled with maa successfully"
+          ls install/python/
+
       - name: Install
         shell: bash
         run: |

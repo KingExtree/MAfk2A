@@ -118,6 +118,19 @@ def install_resource():
 
     interface["version"] = version
 
+    # 检测捆绑的 Python 运行时，存在则使用捆绑版本
+    if os_name == "win":
+        bundled_python = "python/python.exe"
+    else:
+        bundled_python = "python/bin/python3"
+
+    if (install_path / bundled_python).exists():
+        interface["agent"]["child_exec"] = bundled_python
+        print(f"Using bundled Python: {bundled_python}")
+    else:
+        interface["agent"]["child_exec"] = "python"
+        print("Bundled Python not found, using system python")
+
     with open(install_path / "interface.json", "w", encoding="utf-8") as f:
         jsonc.dump(interface, f, ensure_ascii=False, indent=4)
 
