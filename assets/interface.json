@@ -29,7 +29,7 @@
         }
     ],
     "agent": {
-        "child_exec": "python.exe",
+        "child_exec": "python",
         "child_args": [
             "agent/main.py"
         ]
