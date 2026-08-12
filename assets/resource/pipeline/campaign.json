@@ -13,185 +13,39 @@
             "CampaignPhantomEntry"
         ]
     },
-    "CampaignHelpChat": {
+
+    "CampaignPhantomEntry": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [
-                    675,
-                    578,
-                    1,
-                    1
-                ]
+                "target": [190, 1071, 1, 1]
             }
         },
-        "post_delay": 1000,
-        "next": [
-            "CampaignHelpGuild1"
-        ]
-    },
-    "CampaignHelpGuild1": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    77,
-                    386,
-                    1,
-                    1
-                ]
-            }
-        },
-        "post_delay": 800,
-        "next": [
-            "CampaignHelpGuild2"
-        ]
-    },
-    "CampaignHelpGuild2": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    173,
-                    257,
-                    1,
-                    1
-                ]
-            }
-        },
-        "post_delay": 800,
-        "next": [
-            "CampaignHelpSend"
-        ]
-    },
-    "CampaignHelpSend": {
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignSendHelp"
-            }
-        },
-        "next": [
-            "CampaignStop"
-        ]
+        "post_delay": 3000,
+        "next": ["OpenRecommended"]
     },
     "CampaignNormalEntry": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [
-                    551,
-                    1071,
-                    1,
-                    1
-                ]
+                "target": [551, 1071, 1, 1]
             }
         },
         "post_delay": 1500,
-        "next": [
-            "OpenRecommended"
-        ]
-    },
-    "CampaignPhantomEntry": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    190,
-                    1071,
-                    1,
-                    1
-                ]
-            }
-        },
-        "post_delay": 3000,
-        "next": [
-            "OpenRecommended"
-        ]
-    },
-    "CampaignStop": {
-    },
-    "DefeatIndicator": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    0,
-                    85,
-                    720,
-                    251
-                ],
-                "template": "defeat_indicator.png",
-                "threshold": 0.6
-            }
-        },
-        "timeout": 1000
-    },
-    "HandleDefeat": {
-        "recognition": {
-            "type": "DirectHit"
-        },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignNextFormation"
-            }
-        },
-        "post_delay": 1500,
-        "next": [
-            "OpenRecommended"
-        ]
-    },
-    "HandleVictory": {
-        "recognition": {
-            "type": "DirectHit"
-        },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignResetFormation"
-            }
-        },
-        "post_delay": 2000
+        "next": ["OpenRecommended"]
     },
     "OpenRecommended": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [
-                    193,
-                    1190,
-                    1,
-                    1
-                ]
+                "target": [193, 1190, 1, 1]
             }
         },
         "post_delay": 2000,
-        "next": [
-            "TryFormation"
-        ]
-    },
-    "StartBattle": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    607,
-                    1193,
-                    1,
-                    1
-                ]
-            }
-        },
-        "post_delay": 2000,
-        "next": [
-            "WaitBattleEnd"
-        ]
+        "next": ["TryFormation"]
     },
     "TryFormation": {
-        "recognition": {
-            "type": "DirectHit"
-        },
+        "recognition": { "type": "DirectHit" },
         "action": {
             "type": "Custom",
             "param": {
@@ -202,52 +56,266 @@
                 }
             }
         },
-        "next": [
-            "UseFormation"
-        ]
+        "next": ["UseFormation"]
     },
     "UseFormation": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [
-                    424,
-                    1054,
-                    1,
-                    1
-                ]
+                "target": [424, 1054, 1, 1]
             }
         },
         "post_delay": 1000,
-        "next": [
-            "StartBattle"
-        ]
+        "next": ["StartBattle"]
     },
-    "VictoryIndicator": {
-        "recognition": {
-            "type": "TemplateMatch",
+    "StartBattle": {
+        "action": {
+            "type": "Click",
             "param": {
-                "roi": [
-                    0,
-                    117,
-                    720,
-                    268
-                ],
-                "template": "victory_indicator.png",
-                "threshold": 0.6
+                "target": [607, 1193, 1, 1]
             }
         },
-        "timeout": 1000
+        "post_delay": 2000,
+        "next": ["WaitBattleEnd"]
     },
     "WaitBattleEnd": {
-        "recognition": {
-            "type": "DirectHit"
-        },
+        "recognition": { "type": "DirectHit" },
         "action": {
             "type": "Custom",
             "param": {
                 "custom_action": "WaitForBattleEnd"
             }
         }
-    }
+    },
+    "VictoryIndicator": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 117, 720, 268],
+                "template": "victory_indicator_720p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000
+    },
+    "DefeatIndicator": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 85, 720, 251],
+                "template": "defeat_indicator_720p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000
+    },
+    "HandleVictory": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignResetFormation"
+            }
+        },
+        "post_delay": 2000
+    },
+    "HandleDefeat": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignNextFormation"
+            }
+        },
+        "post_delay": 1500,
+        "next": ["OpenRecommended"]
+    },
+    "CampaignHelpChat": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [675, 578, 1, 1]
+            }
+        },
+        "post_delay": 1000,
+        "next": ["CampaignHelpGuild1"]
+    },
+    "CampaignHelpGuild1": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [77, 386, 1, 1]
+            }
+        },
+        "post_delay": 800,
+        "next": ["CampaignHelpGuild2"]
+    },
+    "CampaignHelpGuild2": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [173, 257, 1, 1]
+            }
+        },
+        "post_delay": 800,
+        "next": ["CampaignHelpSend"]
+    },
+    "CampaignHelpSend": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignSendHelp"
+            }
+        },
+        "next": ["CampaignStop"]
+    },
+    "CampaignStop": {},
+
+    "CampaignPhantomEntry_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [190, 1071, 1, 1]
+            }
+        },
+        "post_delay": 3000,
+        "next": ["OpenRecommended_550"]
+    },
+    "CampaignNormalEntry_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [551, 1071, 1, 1]
+            }
+        },
+        "post_delay": 1500,
+        "next": ["OpenRecommended_550"]
+    },
+    "OpenRecommended_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [193, 1190, 1, 1]
+            }
+        },
+        "post_delay": 2000,
+        "next": ["TryFormation_550"]
+    },
+    "TryFormation_550": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignFormationSelect",
+                "custom_action_param": {
+                    "campaign_mode": "phantom",
+                    "formation_index": "1"
+                }
+            }
+        },
+        "next": ["UseFormation_550"]
+    },
+    "UseFormation_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [424, 1054, 1, 1]
+            }
+        },
+        "post_delay": 1000,
+        "next": ["StartBattle_550"]
+    },
+    "StartBattle_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [607, 1193, 1, 1]
+            }
+        },
+        "post_delay": 2000,
+        "next": ["WaitBattleEnd_550"]
+    },
+    "WaitBattleEnd_550": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "WaitForBattleEnd"
+            }
+        }
+    },
+    "VictoryIndicator_550": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 85, 550, 251],
+                "template": "victory_indicator_550p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000
+    },
+    "DefeatIndicator_550": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 85, 550, 251],
+                "template": "defeat_indicator_550p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000
+    },
+    "HandleVictory_550": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignResetFormation"
+            }
+        },
+        "post_delay": 2000
+    },
+    "HandleDefeat_550": {
+        "recognition": { "type": "DirectHit" },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignNextFormation"
+            }
+        },
+        "post_delay": 1500,
+        "next": ["OpenRecommended_550"]
+    },
+    "CampaignHelpChat_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [675, 578, 1, 1]
+            }
+        },
+        "post_delay": 1000,
+        "next": ["CampaignHelpGuild1_550"]
+    },
+    "CampaignHelpGuild1_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [77, 386, 1, 1]
+            }
+        },
+        "post_delay": 800,
+        "next": ["CampaignHelpGuild2_550"]
+    },
+    "CampaignHelpGuild2_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [173, 257, 1, 1]
+            }
+        },
+        "post_delay": 800,
+        "next": ["CampaignHelpSend"]
+    },
+    "CampaignStop_550": {}
 }

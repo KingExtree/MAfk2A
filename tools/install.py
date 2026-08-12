@@ -103,6 +103,7 @@ def install_resource():
 
     configure_ocr_model()
 
+    # 直接复制 resource（两套分辨率各自有完整的 pipeline + image）
     shutil.copytree(
         working_dir / "assets" / "resource",
         install_path / "resource",

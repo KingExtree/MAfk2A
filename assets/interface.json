@@ -45,7 +45,34 @@
             ]
         }
     ],
+    "global_option": [
+        "分辨率"
+    ],
     "option": {
+        "分辨率": {
+            "type": "select",
+            "label": "分辨率",
+            "description": "选择游戏分辨率",
+            "default_case": "720x1280",
+            "cases": [
+                {
+                    "name": "720x1280",
+                    "label": "720 × 1280"
+                },
+                {
+                    "name": "550x978",
+                    "label": "550 × 978",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "next": ["CampaignPhantomEntry_550"],
+                            "custom_action_param": {
+                                "resolution": "550x978"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "救救孩子": {
             "type": "switch",
             "label": "救救孩子",

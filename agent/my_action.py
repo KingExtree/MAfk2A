@@ -10,6 +10,8 @@ from maa.agent.agent_server import AgentServer
 from maa.custom_action import CustomAction
 from maa.context import Context
 
+from agent import coords
+
 
 # =============================================
 # 工具函数
@@ -29,17 +31,6 @@ def _get_param(argv, key, default=None):
 
 
 # =============================================
-# 固定坐标（1280x720，需根据实际截图调整）
-# =============================================
-RIGHT_ARROW = (658, 682)   # 阵容翻页右箭头
-NEXT_BUTTON = (494, 1210)    # 下一关按钮
-RETRY_BUTTON = (511, 1207)    # 再次战斗按钮（失败后出现，需根据实际截图调整）
-BACK_BUTTON = (65, 1211)     # 返回按钮（幻灵全失败后返回关卡选择界面，需根据实际截图调整）
-HELP_INPUT = (241, 1049)     # 聊天输入框（点击获取焦点）
-HELP_SEND = (655, 1046)      # 发送按钮
-
-
-# =============================================
 # 关卡类型状态管理（模块级变量）
 # =============版本================================
 # mode: "phantom" = 幻灵挑战, "normal" = 挑战
@@ -51,12 +42,18 @@ _campaign_state = {
 }
 
 HELP_CHAT_ENABLED = True   # 是否开启"救救孩子"（默认关闭）
+_RES_SUFFIX = ""          # 分辨率后缀：""=720x1280, "_550"=550x978
+
+
+def _task(name: str) -> str:
+    """返回带分辨率后缀的 task 名"""
+    return name + _RES_SUFFIX
 
 
 def _update_try_formation(context: Context, formation_index: int, mode: str):
     """更新 TryFormation 节点的参数"""
     context.override_pipeline({
-        "TryFormation": {
+        _task("TryFormation"): {
             "custom_action_param": {
                 "formation_index": str(formation_index),
                 "campaign_mode": mode,
@@ -74,12 +71,22 @@ class CampaignInit(CustomAction):
     """初始化：幻灵挑战模式，阵容 #1。可通过 send_help 参数开启救救孩子。"""
 
     def run(self, context, argv):
-        global HELP_CHAT_ENABLED
+        global HELP_CHAT_ENABLED, _RES_SUFFIX
         _campaign_state["mode"] = "phantom"
         _campaign_state["formation_index"] = 1
         HELP_CHAT_ENABLED = str(_get_param(argv, "send_help", "false")).lower() == "true"
         if HELP_CHAT_ENABLED:
             print("[CampaignInit] 已开启「救救孩子」")
+
+        # 读取全局分辨率选项，切换坐标缩放 & task 后缀
+        res_str = _get_param(argv, "resolution", "720x1280")
+        try:
+            w_str, h_str = res_str.split("x")
+            coords.set_resolution(int(w_str), int(h_str))
+            _RES_SUFFIX = "_550" if res_str == "550x978" else ""
+        except (ValueError, AttributeError):
+            print(f"[CampaignInit] 无法解析分辨率参数: {res_str}, 使用默认 720x1280")
+
         _update_try_formation(context, 1, "phantom")
         return True
 
@@ -97,7 +104,7 @@ class CampaignFormationSelect(CustomAction):
         if index < 1 or index > 10:
             return False
 
-        x, y = RIGHT_ARROW
+        x, y = coords.get("RIGHT_ARROW")
         for _ in range(index - 1):
             context.tasker.controller.post_click(x, y).wait()
             time.sleep(0.5)
@@ -111,10 +118,10 @@ class CampaignResetFormation(CustomAction):
     def run(self, context, argv):
         _campaign_state["formation_index"] = 1
         mode = _campaign_state["mode"]
-        next_node = "CampaignPhantomEntry" if mode == "phantom" else "CampaignNormalEntry"
+        next_node = _task("CampaignPhantomEntry") if mode == "phantom" else _task("CampaignNormalEntry")
         _update_try_formation(context, 1, mode)
 
-        nx, ny = NEXT_BUTTON
+        nx, ny = coords.get("NEXT_BUTTON")
         context.tasker.controller.post_click(nx, ny).wait()
         time.sleep(1.5)
 
@@ -135,37 +142,37 @@ class CampaignNextFormation(CustomAction):
         if nxt > 10:
             if mode == "phantom":
                 # 幻灵全失败 → 点「返回」→ 切到普通关卡
-                bx, by = BACK_BUTTON
+                bx, by = coords.get("BACK_BUTTON")
                 context.tasker.controller.post_click(bx, by).wait()
                 time.sleep(2)
                 _campaign_state["mode"] = "normal"
                 _campaign_state["formation_index"] = 1
                 _update_try_formation(context, 1, "normal")
-                context.override_next(argv.node_name, ["CampaignNormalEntry"])
+                context.override_next(argv.node_name, [_task("CampaignNormalEntry")])
                 return True
             else:
                 print(f"[CampaignNextFormation] 普通关卡全部失败 HELP_CHAT_ENABLED={HELP_CHAT_ENABLED}")
                 if HELP_CHAT_ENABLED:
                     # 点两次「返回」退回聊天界面
                     print("[CampaignNextFormation] 准备求助，点击两次返回...")
-                    bx, by = BACK_BUTTON
+                    bx, by = coords.get("BACK_BUTTON")
                     for _ in range(2):
                         context.tasker.controller.post_click(bx, by).wait()
                         time.sleep(1.5)
-                    context.override_next(argv.node_name, ["CampaignHelpChat"])
+                    context.override_next(argv.node_name, [_task("CampaignHelpChat")])
                 else:
                     print("[CampaignNextFormation] 未开启求助，直接停止")
-                    context.override_next(argv.node_name, ["CampaignStop"])
+                    context.override_next(argv.node_name, [_task("CampaignStop")])
                 return True
 
         # 还有阵容可试 → 点「再次战斗」→ 继续当前模式
-        rx, ry = RETRY_BUTTON
+        rx, ry = coords.get("RETRY_BUTTON")
         context.tasker.controller.post_click(rx, ry).wait()
         time.sleep(2)
 
         _campaign_state["formation_index"] = nxt
         _update_try_formation(context, nxt, mode)
-        context.override_next(argv.node_name, ["OpenRecommended"])
+        context.override_next(argv.node_name, [_task("OpenRecommended")])
         return True
 
 
@@ -175,7 +182,7 @@ class CampaignSendHelp(CustomAction):
 
     def run(self, context, argv):
         # 1. 点击输入框获取焦点
-        ix, iy = HELP_INPUT
+        ix, iy = coords.get("HELP_INPUT")
         context.tasker.controller.post_click(ix, iy).wait()
         time.sleep(0.5)
 
@@ -195,7 +202,7 @@ class CampaignSendHelp(CustomAction):
         time.sleep(0.5)
 
         # 3. 点击发送
-        sx, sy = HELP_SEND
+        sx, sy = coords.get("HELP_SEND")
         context.tasker.controller.post_click(sx, sy).wait()
         time.sleep(0.5)
 
@@ -234,19 +241,19 @@ class WaitForBattleEnd(CustomAction):
                 continue
 
             # 检测胜利
-            victory = context.run_recognition("VictoryIndicator", screenshot)
+            victory = context.run_recognition(_task("VictoryIndicator"), screenshot)
             if victory.box:
                 print(f"[WaitForBattleEnd] 检测到胜利 (elapsed={elapsed}s)")
-                context.override_next(argv.node_name, ["HandleVictory"])
+                context.override_next(argv.node_name, [_task("HandleVictory")])
                 return True
 
             # 检测失败
-            defeat = context.run_recognition("DefeatIndicator", screenshot)
+            defeat = context.run_recognition(_task("DefeatIndicator"), screenshot)
             if defeat.box:
                 print(f"[WaitForBattleEnd] 检测到失败 (elapsed={elapsed}s)")
-                context.override_next(argv.node_name, ["HandleDefeat"])
+                context.override_next(argv.node_name, [_task("HandleDefeat")])
                 return True
 
         print(f"[WaitForBattleEnd] 超时 (elapsed={elapsed}s)")
-        context.override_next(argv.node_name, ["CampaignStop"])
+        context.override_next(argv.node_name, [_task("CampaignStop")])
         return True
