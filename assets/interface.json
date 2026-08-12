@@ -14,7 +14,7 @@
             "win32": {
                 "class_regex": ".*",
                 "window_regex": "剑与远征：启程",
-                "screencap": "Background",
+                "screencap": "PrintWindow",
                 "mouse": "SendMessageWithWindowPos",
                 "keyboard": "PostMessageWithWindowPos"
             }
@@ -64,7 +64,9 @@
                     "label": "550 × 978",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "next": ["CampaignPhantomEntry_550"],
+                            "next": [
+                                "CampaignPhantomEntry_550"
+                            ],
                             "custom_action_param": {
                                 "resolution": "550x978"
                             }
