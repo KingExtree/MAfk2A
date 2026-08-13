@@ -42,7 +42,8 @@
             "entry": "AutoCampaign",
             "option": [
                 "救救孩子",
-                "挑战类型"
+                "挑战类型",
+                "重试次数"
             ]
         }
     ],
@@ -138,6 +139,84 @@
                         "AutoCampaign": {
                             "custom_action_param": {
                                 "challenge": "normal"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "重试次数": {
+            "type": "select",
+            "label": "重试次数",
+            "description": "全部失败后从头重试的次数",
+            "default_case": "0",
+            "cases": [
+                {
+                    "name": "0",
+                    "label": "不重试"
+                },
+                {
+                    "name": "1",
+                    "label": "1 次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "1"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "2",
+                    "label": "2 次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "2"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "3",
+                    "label": "3 次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "4",
+                    "label": "4 次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "4"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "5",
+                    "label": "5 次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "5"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "infinite",
+                    "label": "无限次",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "retry": "infinite"
                             }
                         }
                     }

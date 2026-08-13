@@ -44,8 +44,31 @@ _campaign_state = {
 # 挑战类型范围：both=幻灵+普通, phantom=只幻灵, normal=只普通
 _challenge_scope = "both"
 
+# 重试设置：0=不重试, 1~5=次数, -1=无限
+_retry_limit = 0
+_retry_count = 0
+
 HELP_CHAT_ENABLED = True   # 是否开启"救救孩子"（默认关闭）
 _RES_SUFFIX = ""          # 分辨率后缀：""=720x1280, "_550"=550x978
+
+
+def _initial_mode() -> str:
+    """根据挑战类型返回初始模式"""
+    return "normal" if _challenge_scope == "normal" else "phantom"
+
+
+def _parse_retry_limit(value) -> int:
+    """解析重试次数：infinite -> -1，数字 -> 1~5，其他 -> 0"""
+    s = str(value).strip().lower()
+    if s == "infinite":
+        return -1
+    try:
+        n = int(s)
+    except ValueError:
+        return 0
+    if n < 0:
+        return -1
+    return max(0, min(5, n))
 
 
 def _task(name: str) -> str:
@@ -74,7 +97,7 @@ class CampaignInit(CustomAction):
     """初始化：读取挑战类型/分辨率参数，设置初始模式与入口。"""
 
     def run(self, context, argv):
-        global HELP_CHAT_ENABLED, _RES_SUFFIX, _challenge_scope
+        global HELP_CHAT_ENABLED, _RES_SUFFIX, _challenge_scope, _retry_limit, _retry_count
         _campaign_state["formation_index"] = 1
         HELP_CHAT_ENABLED = str(_get_param(argv, "send_help", "false")).lower() == "true"
         if HELP_CHAT_ENABLED:
@@ -87,7 +110,12 @@ class CampaignInit(CustomAction):
             _challenge_scope = "both"
 
         # 根据挑战类型决定初始模式
-        _campaign_state["mode"] = "normal" if _challenge_scope == "normal" else "phantom"
+        _campaign_state["mode"] = _initial_mode()
+
+        # 读取重试次数选项
+        _retry_limit = _parse_retry_limit(_get_param(argv, "retry", "0"))
+        _retry_count = 0
+        print(f"[CampaignInit] 重试上限={_retry_limit}")
 
         # 读取全局分辨率选项，切换坐标缩放 & task 后缀
         res_str = _get_param(argv, "resolution", "720x1280")
@@ -151,6 +179,7 @@ class CampaignNextFormation(CustomAction):
        超过 10 则切换关卡类型或停止（若开启则发求救）"""
 
     def run(self, context, argv):
+        global _retry_count
         current = _campaign_state["formation_index"]
         mode = _campaign_state["mode"]
         nxt = current + 1
@@ -167,6 +196,23 @@ class CampaignNextFormation(CustomAction):
                 context.override_next(argv.node_name, [_task("CampaignNormalEntry")])
                 return True
             else:
+                # 整体流程全部失败：优先重试，重试耗尽后再求助/停止
+                if _retry_limit == -1 or _retry_count < _retry_limit:
+                    _retry_count += 1
+                    if _retry_limit == -1:
+                        print(f"[CampaignNextFormation] 全部失败，从头重试（第 {_retry_count} 次，无限）")
+                    else:
+                        print(f"[CampaignNextFormation] 全部失败，从头重试（第 {_retry_count}/{_retry_limit} 次）")
+                    bx, by = coords.get("BACK_BUTTON")
+                    context.tasker.controller.post_click(bx, by).wait()
+                    time.sleep(2)
+                    _campaign_state["mode"] = _initial_mode()
+                    _campaign_state["formation_index"] = 1
+                    _update_try_formation(context, 1, _campaign_state["mode"])
+                    entry = _task("CampaignPhantomEntry") if _campaign_state["mode"] == "phantom" else _task("CampaignNormalEntry")
+                    context.override_next(argv.node_name, [entry])
+                    return True
+
                 print(f"[CampaignNextFormation] 全部失败 mode={mode} scope={_challenge_scope} HELP_CHAT_ENABLED={HELP_CHAT_ENABLED}")
                 if HELP_CHAT_ENABLED:
                     # 点两次「返回」退回聊天界面
