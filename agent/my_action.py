@@ -41,6 +41,9 @@ _campaign_state = {
     "formation_index": 1,
 }
 
+# 挑战类型范围：both=幻灵+普通, phantom=只幻灵, normal=只普通
+_challenge_scope = "both"
+
 HELP_CHAT_ENABLED = True   # 是否开启"救救孩子"（默认关闭）
 _RES_SUFFIX = ""          # 分辨率后缀：""=720x1280, "_550"=550x978
 
@@ -68,15 +71,23 @@ def _update_try_formation(context: Context, formation_index: int, mode: str):
 
 @AgentServer.custom_action("CampaignInit")
 class CampaignInit(CustomAction):
-    """初始化：幻灵挑战模式，阵容 #1。可通过 send_help 参数开启救救孩子。"""
+    """初始化：读取挑战类型/分辨率参数，设置初始模式与入口。"""
 
     def run(self, context, argv):
-        global HELP_CHAT_ENABLED, _RES_SUFFIX
-        _campaign_state["mode"] = "phantom"
+        global HELP_CHAT_ENABLED, _RES_SUFFIX, _challenge_scope
         _campaign_state["formation_index"] = 1
         HELP_CHAT_ENABLED = str(_get_param(argv, "send_help", "false")).lower() == "true"
         if HELP_CHAT_ENABLED:
             print("[CampaignInit] 已开启「救救孩子」")
+
+        # 读取挑战类型选项
+        _challenge_scope = str(_get_param(argv, "challenge", "both")).lower()
+        if _challenge_scope not in ("both", "phantom", "normal"):
+            print(f"[CampaignInit] 未知挑战类型: {_challenge_scope}, 回退 both")
+            _challenge_scope = "both"
+
+        # 根据挑战类型决定初始模式
+        _campaign_state["mode"] = "normal" if _challenge_scope == "normal" else "phantom"
 
         # 读取全局分辨率选项，切换坐标缩放 & task 后缀
         res_str = _get_param(argv, "resolution", "720x1280")
@@ -87,7 +98,12 @@ class CampaignInit(CustomAction):
         except (ValueError, AttributeError):
             print(f"[CampaignInit] 无法解析分辨率参数: {res_str}, 使用默认 720x1280")
 
-        _update_try_formation(context, 1, "phantom")
+        _update_try_formation(context, 1, _campaign_state["mode"])
+
+        # 动态路由到对应入口，避免与 option 的 next 打架
+        entry = _task("CampaignPhantomEntry") if _campaign_state["mode"] == "phantom" else _task("CampaignNormalEntry")
+        context.override_next(argv.node_name, [entry])
+        print(f"[CampaignInit] 挑战类型={_challenge_scope}, 模式={_campaign_state['mode']}, 入口={entry}")
         return True
 
 
@@ -140,8 +156,8 @@ class CampaignNextFormation(CustomAction):
         nxt = current + 1
 
         if nxt > 10:
-            if mode == "phantom":
-                # 幻灵全失败 → 点「返回」→ 切到普通关卡
+            if mode == "phantom" and _challenge_scope == "both":
+                # 幻灵全失败且选择「都打」→ 点「返回」→ 切到普通关卡
                 bx, by = coords.get("BACK_BUTTON")
                 context.tasker.controller.post_click(bx, by).wait()
                 time.sleep(2)
@@ -151,7 +167,7 @@ class CampaignNextFormation(CustomAction):
                 context.override_next(argv.node_name, [_task("CampaignNormalEntry")])
                 return True
             else:
-                print(f"[CampaignNextFormation] 普通关卡全部失败 HELP_CHAT_ENABLED={HELP_CHAT_ENABLED}")
+                print(f"[CampaignNextFormation] 全部失败 mode={mode} scope={_challenge_scope} HELP_CHAT_ENABLED={HELP_CHAT_ENABLED}")
                 if HELP_CHAT_ENABLED:
                     # 点两次「返回」退回聊天界面
                     print("[CampaignNextFormation] 准备求助，点击两次返回...")

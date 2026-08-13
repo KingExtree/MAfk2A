@@ -38,10 +38,11 @@
         {
             "name": "自动推挂机关卡",
             "label": "自动推关",
-            "description": "自动推关，依次尝试所有作业，先幻灵后普通",
+            "description": "自动推关，依次尝试所有作业",
             "entry": "AutoCampaign",
             "option": [
-                "救救孩子"
+                "救救孩子",
+                "挑战类型"
             ]
         }
     ],
@@ -64,9 +65,6 @@
                     "label": "550 × 978",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "next": [
-                                "CampaignPhantomEntry_550"
-                            ],
                             "custom_action_param": {
                                 "resolution": "550x978"
                             }
@@ -99,6 +97,47 @@
                         "AutoCampaign": {
                             "custom_action_param": {
                                 "send_help": "False"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "挑战类型": {
+            "type": "select",
+            "label": "挑战类型",
+            "description": "选择要挑战的关卡类型",
+            "default_case": "both",
+            "cases": [
+                {
+                    "name": "both",
+                    "label": "幻灵 + 普通",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "challenge": "both"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "phantom",
+                    "label": "幻灵",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "challenge": "phantom"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "normal",
+                    "label": "普通",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "challenge": "normal"
                             }
                         }
                     }
