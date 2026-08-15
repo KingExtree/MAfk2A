@@ -71,6 +71,17 @@
                             }
                         }
                     }
+                },
+                {
+                    "name": "1920x1080",
+                    "label": "1920 × 1080",
+                    "pipeline_override": {
+                        "AutoCampaign": {
+                            "custom_action_param": {
+                                "resolution": "1920x1080"
+                            }
+                        }
+                    }
                 }
             ]
         },

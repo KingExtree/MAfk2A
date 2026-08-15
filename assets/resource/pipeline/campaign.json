@@ -1,4 +1,20 @@
 {
+    "$__mpe_config_campaign": {
+        "$__mpe_code": {
+            "prefix": "",
+            "coordinateMode": "absolute-v1",
+            "lastSyncTime": 1786766591294,
+            "isModifiedExternally": false,
+            "filePath": "D:\\文档\\MAFK2A\\MAfk2A\\assets\\resource\\pipeline\\campaign.json",
+            "savedViewport": {
+                "x": -1780,
+                "y": -76,
+                "zoom": 0.8
+            },
+            "filename": "campaign",
+            "version": "v1.7.6"
+        }
+    },
     "AutoCampaign": {
         "action": {
             "type": "Custom",
@@ -11,154 +27,220 @@
         },
         "next": [
             "CampaignPhantomEntry"
-        ]
-    },
-
-    "CampaignPhantomEntry": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [190, 1071, 1, 1]
-            }
-        },
-        "post_delay": 3000,
-        "next": ["OpenRecommended"]
-    },
-    "CampaignNormalEntry": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [551, 1071, 1, 1]
-            }
-        },
-        "post_delay": 1500,
-        "next": ["OpenRecommended"]
-    },
-    "OpenRecommended": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [193, 1190, 1, 1]
-            }
-        },
-        "post_delay": 2000,
-        "next": ["TryFormation"]
-    },
-    "TryFormation": {
-        "recognition": { "type": "DirectHit" },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignFormationSelect",
-                "custom_action_param": {
-                    "campaign_mode": "phantom",
-                    "formation_index": "1"
-                }
-            }
-        },
-        "next": ["UseFormation"]
-    },
-    "UseFormation": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [424, 1054, 1, 1]
-            }
-        },
-        "post_delay": 1000,
-        "next": ["StartBattle"]
-    },
-    "StartBattle": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [607, 1193, 1, 1]
-            }
-        },
-        "post_delay": 2000,
-        "next": ["WaitBattleEnd"]
-    },
-    "WaitBattleEnd": {
-        "recognition": { "type": "DirectHit" },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "WaitForBattleEnd"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 2157
             }
         }
-    },
-    "VictoryIndicator": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [0, 117, 720, 268],
-                "template": "victory_indicator_720p.png",
-                "threshold": 0.6
-            }
-        },
-        "timeout": 1000
-    },
-    "DefeatIndicator": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [0, 85, 720, 251],
-                "template": "defeat_indicator_720p.png",
-                "threshold": 0.6
-            }
-        },
-        "timeout": 1000
-    },
-    "HandleVictory": {
-        "recognition": { "type": "DirectHit" },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignResetFormation"
-            }
-        },
-        "post_delay": 2000
-    },
-    "HandleDefeat": {
-        "recognition": { "type": "DirectHit" },
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "CampaignNextFormation"
-            }
-        },
-        "post_delay": 1500,
-        "next": ["OpenRecommended"]
     },
     "CampaignHelpChat": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [675, 578, 1, 1]
+                "target": [
+                    675,
+                    578,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 1000,
-        "next": ["CampaignHelpGuild1"]
+        "next": [
+            "CampaignHelpGuild1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2652,
+                "y": 666
+            }
+        }
+    },
+    "CampaignHelpChat_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1882,
+                    485,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1000,
+        "next": [
+            "CampaignHelpGuild1_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2652,
+                "y": 339
+            }
+        }
+    },
+    "CampaignHelpChat_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    675,
+                    578,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1000,
+        "next": [
+            "CampaignHelpGuild1_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2652,
+                "y": 12
+            }
+        }
     },
     "CampaignHelpGuild1": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [77, 386, 1, 1]
+                "target": [
+                    77,
+                    386,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 800,
-        "next": ["CampaignHelpGuild2"]
+        "next": [
+            "CampaignHelpGuild2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2972,
+                "y": 666
+            }
+        }
+    },
+    "CampaignHelpGuild1_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    707,
+                    331,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 800,
+        "next": [
+            "CampaignHelpGuild2_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2972,
+                "y": 339
+            }
+        }
+    },
+    "CampaignHelpGuild1_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    77,
+                    386,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 800,
+        "next": [
+            "CampaignHelpGuild2_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2972,
+                "y": 12
+            }
+        }
     },
     "CampaignHelpGuild2": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [173, 257, 1, 1]
+                "target": [
+                    173,
+                    257,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 800,
-        "next": ["CampaignHelpSend"]
+        "next": [
+            "CampaignHelpSend"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 3292,
+                "y": 666
+            }
+        }
+    },
+    "CampaignHelpGuild2_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    797,
+                    212,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 800,
+        "next": [
+            "CampaignHelpSend"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 3292,
+                "y": 339
+            }
+        }
+    },
+    "CampaignHelpGuild2_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    173,
+                    257,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 800,
+        "next": [
+            "CampaignHelpSend"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 3292,
+                "y": 12
+            }
+        }
     },
     "CampaignHelpSend": {
         "action": {
@@ -167,42 +249,482 @@
                 "custom_action": "CampaignSendHelp"
             }
         },
-        "next": ["CampaignStop"]
+        "next": [
+            "CampaignStop"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 3612,
+                "y": 377
+            }
+        }
     },
-    "CampaignStop": {},
-
-    "CampaignPhantomEntry_550": {
+    "CampaignNormalEntry": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [190, 1071, 1, 1]
+                "target": [
+                    551,
+                    1071,
+                    1,
+                    1
+                ]
             }
         },
-        "post_delay": 3000,
-        "next": ["OpenRecommended_550"]
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2462
+            }
+        }
+    },
+    "CampaignNormalEntry_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1252,
+                    911,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 1557
+            }
+        }
     },
     "CampaignNormalEntry_550": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [551, 1071, 1, 1]
+                "target": [
+                    551,
+                    1071,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 1500,
-        "next": ["OpenRecommended_550"]
+        "next": [
+            "OpenRecommended_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1852,
+                "y": 1557
+            }
+        }
+    },
+    "CampaignPhantomEntry": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    190,
+                    1071,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 3000,
+        "next": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2135
+            }
+        }
+    },
+    "CampaignPhantomEntry_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    714,
+                    916,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 3000,
+        "next": [
+            "OpenRecommended_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 1230
+            }
+        }
+    },
+    "CampaignPhantomEntry_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    190,
+                    1071,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 3000,
+        "next": [
+            "OpenRecommended_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1852,
+                "y": 1230
+            }
+        }
+    },
+    "CampaignStop": {
+        "$__mpe_code": {
+            "position": {
+                "x": 3932,
+                "y": 409
+            }
+        }
+    },
+    "CampaignStop_1080": {
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 12
+            }
+        }
+    },
+    "CampaignStop_550": {
+        "$__mpe_code": {
+            "position": {
+                "x": 252,
+                "y": 12
+            }
+        }
+    },
+    "DefeatIndicator": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    0,
+                    85,
+                    720,
+                    251
+                ],
+                "template": "defeat_indicator_720p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 1692,
+                "y": 12
+            }
+        }
+    },
+    "DefeatIndicator_1080": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    614,
+                    71,
+                    678,
+                    209
+                ],
+                "template": "defeat_indicator_1080p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 1212,
+                "y": 12
+            }
+        }
+    },
+    "DefeatIndicator_550": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    0,
+                    85,
+                    550,
+                    251
+                ],
+                "template": "defeat_indicator_550p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 12
+            }
+        }
+    },
+    "HandleDefeat": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignNextFormation"
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 1824
+            }
+        }
+    },
+    "HandleDefeat_1080": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignNextFormation"
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 919
+            }
+        }
+    },
+    "HandleDefeat_550": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignNextFormation"
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1852,
+                "y": 919
+            }
+        }
+    },
+    "HandleVictory": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignResetFormation"
+            }
+        },
+        "post_delay": 2000,
+        "$__mpe_code": {
+            "position": {
+                "x": 492,
+                "y": 12
+            }
+        }
+    },
+    "HandleVictory_1080": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignResetFormation"
+            }
+        },
+        "post_delay": 2000,
+        "$__mpe_code": {
+            "position": {
+                "x": 732,
+                "y": 12
+            }
+        }
+    },
+    "HandleVictory_550": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignResetFormation"
+            }
+        },
+        "post_delay": 2000,
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 12
+            }
+        }
+    },
+    "OpenRecommended": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    193,
+                    1190,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "TryFormation"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 2142
+            }
+        }
+    },
+    "OpenRecommended_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    581,
+                    999,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "TryFormation_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 1230
+            }
+        }
     },
     "OpenRecommended_550": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [193, 1190, 1, 1]
+                "target": [
+                    193,
+                    1190,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 2000,
-        "next": ["TryFormation_550"]
+        "next": [
+            "TryFormation_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2172,
+                "y": 1230
+            }
+        }
     },
-    "TryFormation_550": {
-        "recognition": { "type": "DirectHit" },
+    "StartBattle": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    607,
+                    1193,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "WaitBattleEnd"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 2142
+            }
+        }
+    },
+    "StartBattle_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1287,
+                    1001,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "WaitBattleEnd_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 1237
+            }
+        }
+    },
+    "StartBattle_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    607,
+                    1193,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "WaitBattleEnd_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 3132,
+                "y": 1237
+            }
+        }
+    },
+    "TryFormation": {
         "action": {
             "type": "Custom",
             "param": {
@@ -213,34 +735,168 @@
                 }
             }
         },
-        "next": ["UseFormation_550"]
+        "next": [
+            "UseFormation"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 2157
+            }
+        }
+    },
+    "TryFormation_1080": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignFormationSelect",
+                "custom_action_param": {
+                    "campaign_mode": "phantom",
+                    "formation_index": "1"
+                }
+            }
+        },
+        "next": [
+            "UseFormation_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 1252
+            }
+        }
+    },
+    "TryFormation_550": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignFormationSelect",
+                "custom_action_param": {
+                    "campaign_mode": "phantom",
+                    "formation_index": "1"
+                }
+            }
+        },
+        "next": [
+            "UseFormation_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2492,
+                "y": 1252
+            }
+        }
+    },
+    "UseFormation": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    424,
+                    1054,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1000,
+        "next": [
+            "StartBattle"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 2142
+            }
+        }
+    },
+    "UseFormation_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1007,
+                    878,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1000,
+        "next": [
+            "StartBattle_1080"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 1237
+            }
+        }
     },
     "UseFormation_550": {
         "action": {
             "type": "Click",
             "param": {
-                "target": [424, 1054, 1, 1]
+                "target": [
+                    424,
+                    1054,
+                    1,
+                    1
+                ]
             }
         },
         "post_delay": 1000,
-        "next": ["StartBattle_550"]
+        "next": [
+            "StartBattle_550"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2812,
+                "y": 1237
+            }
+        }
     },
-    "StartBattle_550": {
-        "action": {
-            "type": "Click",
+    "VictoryIndicator": {
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [607, 1193, 1, 1]
+                "roi": [
+                    0,
+                    117,
+                    720,
+                    268
+                ],
+                "template": "victory_indicator_720p.png",
+                "threshold": 0.6
             }
         },
-        "post_delay": 2000,
-        "next": ["WaitBattleEnd_550"]
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 2172,
+                "y": 12
+            }
+        }
     },
-    "WaitBattleEnd_550": {
-        "recognition": { "type": "DirectHit" },
-        "action": {
-            "type": "Custom",
+    "VictoryIndicator_1080": {
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "custom_action": "WaitForBattleEnd"
+                "roi": [
+                    450,
+                    48,
+                    1009,
+                    314
+                ],
+                "template": "victory_indicator_1080p.png",
+                "threshold": 0.6
+            }
+        },
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 1452,
+                "y": 12
             }
         }
     },
@@ -248,74 +904,64 @@
         "recognition": {
             "type": "TemplateMatch",
             "param": {
-                "roi": [0, 85, 550, 251],
+                "roi": [
+                    0,
+                    85,
+                    550,
+                    251
+                ],
                 "template": "victory_indicator_550p.png",
                 "threshold": 0.6
             }
         },
-        "timeout": 1000
-    },
-    "DefeatIndicator_550": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [0, 85, 550, 251],
-                "template": "defeat_indicator_550p.png",
-                "threshold": 0.6
+        "timeout": 1000,
+        "$__mpe_code": {
+            "position": {
+                "x": 2412,
+                "y": 12
             }
-        },
-        "timeout": 1000
+        }
     },
-    "HandleVictory_550": {
-        "recognition": { "type": "DirectHit" },
+    "WaitBattleEnd": {
         "action": {
             "type": "Custom",
             "param": {
-                "custom_action": "CampaignResetFormation"
+                "custom_action": "WaitForBattleEnd"
             }
         },
-        "post_delay": 2000
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 2191
+            }
+        }
     },
-    "HandleDefeat_550": {
-        "recognition": { "type": "DirectHit" },
+    "WaitBattleEnd_1080": {
         "action": {
             "type": "Custom",
             "param": {
-                "custom_action": "CampaignNextFormation"
+                "custom_action": "WaitForBattleEnd"
             }
         },
-        "post_delay": 1500,
-        "next": ["OpenRecommended_550"]
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 1286
+            }
+        }
     },
-    "CampaignHelpChat_550": {
+    "WaitBattleEnd_550": {
         "action": {
-            "type": "Click",
+            "type": "Custom",
             "param": {
-                "target": [675, 578, 1, 1]
+                "custom_action": "WaitForBattleEnd"
             }
         },
-        "post_delay": 1000,
-        "next": ["CampaignHelpGuild1_550"]
-    },
-    "CampaignHelpGuild1_550": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [77, 386, 1, 1]
+        "$__mpe_code": {
+            "position": {
+                "x": 3452,
+                "y": 1286
             }
-        },
-        "post_delay": 800,
-        "next": ["CampaignHelpGuild2_550"]
-    },
-    "CampaignHelpGuild2_550": {
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [173, 257, 1, 1]
-            }
-        },
-        "post_delay": 800,
-        "next": ["CampaignHelpSend"]
-    },
-    "CampaignStop_550": {}
+        }
+    }
 }

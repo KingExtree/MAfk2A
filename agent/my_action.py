@@ -49,7 +49,14 @@ _retry_limit = 0
 _retry_count = 0
 
 HELP_CHAT_ENABLED = True   # 是否开启"救救孩子"（默认关闭）
-_RES_SUFFIX = ""          # 分辨率后缀：""=720x1280, "_550"=550x978
+_RES_SUFFIX = ""          # 分辨率后缀：""=720x1280, "_550"=550x978, "_1080"=1920x1080
+
+# 分辨率 -> task 后缀映射
+_RESOLUTION_SUFFIX_MAP = {
+    "720x1280":  "",
+    "550x978":   "_550",
+    "1920x1080": "_1080",
+}
 
 
 def _initial_mode() -> str:
@@ -122,7 +129,7 @@ class CampaignInit(CustomAction):
         try:
             w_str, h_str = res_str.split("x")
             coords.set_resolution(int(w_str), int(h_str))
-            _RES_SUFFIX = "_550" if res_str == "550x978" else ""
+            _RES_SUFFIX = _RESOLUTION_SUFFIX_MAP.get(res_str, "")
         except (ValueError, AttributeError):
             print(f"[CampaignInit] 无法解析分辨率参数: {res_str}, 使用默认 720x1280")
 
