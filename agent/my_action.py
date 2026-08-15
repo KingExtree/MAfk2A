@@ -107,15 +107,18 @@ class CampaignInit(CustomAction):
         global HELP_CHAT_ENABLED, _RES_SUFFIX, _challenge_scope, _retry_limit, _retry_count
         _campaign_state["formation_index"] = 1
 
-        # 方案 B：参数已平铺到 AutoCampaign 节点顶层字段，从节点定义一次性读取
+        # 参数存放在 AutoCampaign 节点的 attach 扩展字段中。
+        # attach 在多次 pipeline_override 时用 |= 累积合并，不会像顶层字段那样被丢弃，
+        # 也不会像 custom_action_param 那样被整体覆盖。
         data = context.get_node_data("AutoCampaign") or {}
+        attach = data.get("attach", {}) or {}
 
-        HELP_CHAT_ENABLED = str(data.get("send_help", "false")).lower() == "true"
+        HELP_CHAT_ENABLED = str(attach.get("send_help", "false")).lower() == "true"
         if HELP_CHAT_ENABLED:
             print("[CampaignInit] 已开启「救救孩子」")
 
         # 读取挑战类型选项
-        _challenge_scope = str(data.get("challenge", "both")).lower()
+        _challenge_scope = str(attach.get("challenge", "both")).lower()
         if _challenge_scope not in ("both", "phantom", "normal"):
             print(f"[CampaignInit] 未知挑战类型: {_challenge_scope}, 回退 both")
             _challenge_scope = "both"
@@ -124,12 +127,12 @@ class CampaignInit(CustomAction):
         _campaign_state["mode"] = _initial_mode()
 
         # 读取重试次数选项
-        _retry_limit = _parse_retry_limit(data.get("retry", "0"))
+        _retry_limit = _parse_retry_limit(attach.get("retry", "0"))
         _retry_count = 0
         print(f"[CampaignInit] 重试上限={_retry_limit}")
 
         # 读取全局分辨率选项，切换坐标缩放 & task 后缀
-        res_str = str(data.get("resolution", "720x1280"))
+        res_str = str(attach.get("resolution", "720x1280"))
         try:
             w_str, h_str = res_str.split("x")
             coords.set_resolution(int(w_str), int(h_str))

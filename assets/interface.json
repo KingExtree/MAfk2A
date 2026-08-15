@@ -66,7 +66,9 @@
                     "label": "550 × 978",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "resolution": "550x978"
+                            "attach": {
+                                "resolution": "550x978"
+                            }
                         }
                     }
                 },
@@ -75,7 +77,9 @@
                     "label": "1920 × 1080",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "resolution": "1920x1080"
+                            "attach": {
+                                "resolution": "1920x1080"
+                            }
                         }
                     }
                 }
@@ -92,7 +96,9 @@
                     "label": "开启",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "send_help": "True"
+                            "attach": {
+                                "send_help": "True"
+                            }
                         }
                     }
                 },
@@ -101,7 +107,9 @@
                     "label": "关闭",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "send_help": "False"
+                            "attach": {
+                                "send_help": "False"
+                            }
                         }
                     }
                 }
@@ -118,7 +126,9 @@
                     "label": "幻灵 + 普通",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "challenge": "both"
+                            "attach": {
+                                "challenge": "both"
+                            }
                         }
                     }
                 },
@@ -127,7 +137,9 @@
                     "label": "幻灵",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "challenge": "phantom"
+                            "attach": {
+                                "challenge": "phantom"
+                            }
                         }
                     }
                 },
@@ -136,7 +148,9 @@
                     "label": "普通",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "challenge": "normal"
+                            "attach": {
+                                "challenge": "normal"
+                            }
                         }
                     }
                 }
@@ -157,7 +171,9 @@
                     "label": "1 次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "1"
+                            "attach": {
+                                "retry": "1"
+                            }
                         }
                     }
                 },
@@ -166,7 +182,9 @@
                     "label": "2 次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "2"
+                            "attach": {
+                                "retry": "2"
+                            }
                         }
                     }
                 },
@@ -175,7 +193,9 @@
                     "label": "3 次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "3"
+                            "attach": {
+                                "retry": "3"
+                            }
                         }
                     }
                 },
@@ -184,7 +204,9 @@
                     "label": "4 次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "4"
+                            "attach": {
+                                "retry": "4"
+                            }
                         }
                     }
                 },
@@ -193,7 +215,9 @@
                     "label": "5 次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "5"
+                            "attach": {
+                                "retry": "5"
+                            }
                         }
                     }
                 },
@@ -202,7 +226,9 @@
                     "label": "无限次",
                     "pipeline_override": {
                         "AutoCampaign": {
-                            "retry": "infinite"
+                            "attach": {
+                                "retry": "infinite"
+                            }
                         }
                     }
                 }
