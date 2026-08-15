@@ -6,7 +6,7 @@
     "license": "MIT",
     "welcome": "欢迎使用 MAFK2A！",
     "github": "https://github.com/KingExtree/MAfk2A",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "controller": [
         {
             "name": "桌面端",
