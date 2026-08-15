@@ -59,11 +59,11 @@
             "cases": [
                 {
                     "name": "720x1280",
-                    "label": "720 × 1280"
+                    "label": "竖屏720 × 1280"
                 },
                 {
                     "name": "550x978",
-                    "label": "550 × 978",
+                    "label": "竖屏550 × 978",
                     "pipeline_override": {
                         "AutoCampaign": {
                             "attach": {
@@ -74,7 +74,7 @@
                 },
                 {
                     "name": "1920x1080",
-                    "label": "1920 × 1080",
+                    "label": "横屏1920 × 1080",
                     "pipeline_override": {
                         "AutoCampaign": {
                             "attach": {
