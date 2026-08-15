@@ -140,6 +140,14 @@ class CampaignInit(CustomAction):
         except (ValueError, AttributeError):
             print(f"[CampaignInit] 无法解析分辨率参数: {res_str}, 使用默认 720x1280")
 
+        # 关键修复：让 MAA 截图使用原始尺寸（不做短边 720 缩放）。
+        # 否则横屏 1920x1080 会被缩成 1280x720，导致 _1080 坐标越界而点击失败。
+        try:
+            context.tasker.controller.set_screenshot_use_raw_size(True)
+            print("[CampaignInit] 已设置截图使用原始尺寸 (raw_size=true)")
+        except Exception as e:
+            print(f"[CampaignInit] 设置截图原始尺寸失败: {e}")
+
         _update_try_formation(context, 1, _campaign_state["mode"])
 
         # 动态路由到对应入口，避免与 option 的 next 打架
