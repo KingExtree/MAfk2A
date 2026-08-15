@@ -19,10 +19,7 @@
         "action": {
             "type": "Custom",
             "param": {
-                "custom_action": "CampaignInit",
-                "custom_action_param": {
-                    "send_help": "false"
-                }
+                "custom_action": "CampaignInit"
             }
         },
         "next": [
