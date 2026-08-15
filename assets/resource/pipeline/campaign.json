@@ -3,13 +3,13 @@
         "$__mpe_code": {
             "prefix": "",
             "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1786768285622,
+            "lastSyncTime": 1786794880139,
             "isModifiedExternally": false,
             "filePath": "D:\\文档\\MAFK2A\\MAfk2A\\assets\\resource\\pipeline\\campaign.json",
             "savedViewport": {
-                "x": 178,
-                "y": -702,
-                "zoom": 0.76
+                "x": -1262,
+                "y": 81,
+                "zoom": 0.66
             },
             "filename": "campaign",
             "version": "v1.7.6"
@@ -86,8 +86,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    675,
-                    578,
+                    513,
+                    442,
                     1,
                     1
                 ]
@@ -155,8 +155,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    77,
-                    386,
+                    44,
+                    291,
                     1,
                     1
                 ]
@@ -224,8 +224,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    173,
-                    257,
+                    130,
+                    194,
                     1,
                     1
                 ]
@@ -310,8 +310,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    551,
-                    1071,
+                    404,
+                    786,
                     1,
                     1
                 ]
@@ -379,8 +379,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    190,
-                    1071,
+                    136,
+                    788,
                     1,
                     1
                 ]
@@ -724,8 +724,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    607,
-                    1193,
+                    367,
+                    907,
                     1,
                     1
                 ]
@@ -856,8 +856,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    424,
-                    1054,
+                    326,
+                    816,
                     1,
                     1
                 ]
