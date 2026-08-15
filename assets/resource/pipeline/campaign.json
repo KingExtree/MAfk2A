@@ -3,13 +3,13 @@
         "$__mpe_code": {
             "prefix": "",
             "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1786766591294,
+            "lastSyncTime": 1786768285622,
             "isModifiedExternally": false,
             "filePath": "D:\\文档\\MAFK2A\\MAfk2A\\assets\\resource\\pipeline\\campaign.json",
             "savedViewport": {
-                "x": -1780,
-                "y": -76,
-                "zoom": 0.8
+                "x": 178,
+                "y": -702,
+                "zoom": 0.76
             },
             "filename": "campaign",
             "version": "v1.7.6"
@@ -19,7 +19,10 @@
         "action": {
             "type": "Custom",
             "param": {
-                "custom_action": "CampaignInit"
+                "custom_action": "CampaignInit",
+                "custom_action_param": {
+                    "send_help": "false"
+                }
             }
         },
         "next": [
@@ -268,7 +271,7 @@
                 ]
             }
         },
-        "post_delay": 1500,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended"
         ],
@@ -291,7 +294,7 @@
                 ]
             }
         },
-        "post_delay": 1500,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended_1080"
         ],
@@ -314,7 +317,7 @@
                 ]
             }
         },
-        "post_delay": 1500,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended_550"
         ],
@@ -337,7 +340,7 @@
                 ]
             }
         },
-        "post_delay": 3000,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended"
         ],
@@ -360,7 +363,7 @@
                 ]
             }
         },
-        "post_delay": 3000,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended_1080"
         ],
@@ -383,7 +386,7 @@
                 ]
             }
         },
-        "post_delay": 3000,
+        "post_delay": 2500,
         "next": [
             "OpenRecommended_550"
         ],
@@ -584,16 +587,22 @@
         }
     },
     "OpenRecommended": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    193,
-                    1190,
-                    1,
-                    1
+                "roi": [
+                    111,
+                    1128,
+                    178,
+                    135
+                ],
+                "template": [
+                    "Recommended_720p.png"
                 ]
             }
+        },
+        "action": {
+            "type": "Click"
         },
         "post_delay": 2000,
         "next": [
@@ -607,16 +616,22 @@
         }
     },
     "OpenRecommended_1080": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    581,
-                    999,
-                    1,
-                    1
+                "roi": [
+                    524,
+                    944,
+                    126,
+                    119
+                ],
+                "template": [
+                    "Recommended_1080p.png"
                 ]
             }
+        },
+        "action": {
+            "type": "Click"
         },
         "post_delay": 2000,
         "next": [
@@ -630,16 +645,22 @@
         }
     },
     "OpenRecommended_550": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    193,
-                    1190,
-                    1,
-                    1
+                "roi": [
+                    93,
+                    857,
+                    116,
+                    108
+                ],
+                "template": [
+                    "Recommended_550p.png"
                 ]
             }
+        },
+        "action": {
+            "type": "Click"
         },
         "post_delay": 2000,
         "next": [

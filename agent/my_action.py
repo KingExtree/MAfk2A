@@ -299,24 +299,15 @@ class WaitForBattleEnd(CustomAction):
     """循环检测战斗是否结束（胜利/失败），内部自行轮询"""
 
     def run(self, context, argv):
-        import threading
-
-        stop_flag = threading.Event()
-
-        def on_stop():
-            stop_flag.set()
-
-        # 注册 MAA 中断回调
-        try:
-            token = context.tasker.bind_stop_callback(on_stop)
-        except Exception:
-            token = None
-
         max_wait = 300  # 最多等 300 秒
         interval = 3    # 每 3 秒检查一次
         elapsed = 0
 
-        while elapsed < max_wait and not stop_flag.is_set():
+        # 停止检测：
+        # - post_stop 会同步置 need_to_stop，MaaTaskerStopping 立即变 true → 循环立刻退出；
+        # - 单查 running 不行：任务链（含本循环）没结束前 running 恒为 true，会死等；
+        # - 通信断开时 running 查询返回 false，同样退出。
+        while elapsed < max_wait and context.tasker.running and not context.tasker.stopping:
             time.sleep(interval)
             elapsed += interval
 
@@ -337,6 +328,10 @@ class WaitForBattleEnd(CustomAction):
                 print(f"[WaitForBattleEnd] 检测到失败 (elapsed={elapsed}s)")
                 context.override_next(argv.node_name, [_task("HandleDefeat")])
                 return True
+
+        if context.tasker.stopping or not context.tasker.running:
+            print(f"[WaitForBattleEnd] 任务已停止，退出轮询 (elapsed={elapsed}s)")
+            return True
 
         print(f"[WaitForBattleEnd] 超时 (elapsed={elapsed}s)")
         context.override_next(argv.node_name, [_task("CampaignStop")])
