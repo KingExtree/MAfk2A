@@ -7,9 +7,9 @@
             "isModifiedExternally": false,
             "filePath": "D:\\文档\\MAFK2A\\MAfk2A\\assets\\resource\\pipeline\\campaign.json",
             "savedViewport": {
-                "x": -1262,
-                "y": 81,
-                "zoom": 0.66
+                "x": -981,
+                "y": -820,
+                "zoom": 0.87
             },
             "filename": "campaign",
             "version": "v1.7.6"
@@ -379,8 +379,8 @@
             "type": "Click",
             "param": {
                 "target": [
-                    136,
-                    788,
+                    154,
+                    825,
                     1,
                     1
                 ]
