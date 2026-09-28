@@ -685,6 +685,8 @@
                 ]
             }
         },
+        "repeat": 3,
+        "repeat_delay": 500,
         "post_delay": 2000,
         "next": [
             "WaitBattleEnd"
@@ -708,6 +710,8 @@
                 ]
             }
         },
+        "repeat": 3,
+        "repeat_delay": 500,
         "post_delay": 2000,
         "next": [
             "WaitBattleEnd_1080"
@@ -731,6 +735,8 @@
                 ]
             }
         },
+        "repeat": 3,
+        "repeat_delay": 500,
         "post_delay": 2000,
         "next": [
             "WaitBattleEnd_550"
