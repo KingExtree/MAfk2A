@@ -444,21 +444,11 @@ deps/*
 !deps/tools/
 deps/tools/*
 !deps/tools/*.schema.json
-/build/
-/install/
+build
+install
 
 # Tools
 tools/ImageCropper/**/*.png
 
-# 运行时产物：只忽略仓库根目录下的，避免连带忽略 assets/config/resolution.json
-/config/
-/debug/
-/logs/
-/log_*/
-
-# agent 目录 junction（开发期让 assets/agent/main.py 也能解析到仓库根 agent/）
-assets/agent
-
-# image 目录 junction（MPE 用相对路径 "." 加载资源包，模板按进程 cwd 解析，见 docs 报告 7.6）
-/image
-assets/image
+config
+debug

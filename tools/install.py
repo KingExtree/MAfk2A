@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import json
 import shutil
 import sys
 
@@ -133,10 +132,6 @@ def install_resource():
         interface["agent"]["child_exec"] = "python"
         print("Bundled Python not found, using system python")
 
-    # 源码目录里 interface.json 在 assets/ 下、agent 在仓库根目录，所以要写 "../agent/main.py"；
-    # 发布包里 interface.json 与 agent/ 同级，这里改回 "agent/main.py"。
-    interface["agent"]["child_args"] = ["agent/main.py"]
-
     with open(install_path / "interface.json", "w", encoding="utf-8") as f:
         jsonc.dump(interface, f, ensure_ascii=False, indent=4)
 
@@ -160,37 +155,9 @@ def install_agent():
     )
 
 
-def _strip_mpe_keys(value):
-    """递归去掉 MaaPipelineEditor 的编辑器元数据（$__mpe_* 键）。"""
-    if isinstance(value, dict):
-        return {
-            key: _strip_mpe_keys(item)
-            for key, item in value.items()
-            if not key.startswith("$__mpe")
-        }
-    if isinstance(value, list):
-        return [_strip_mpe_keys(item) for item in value]
-    return value
-
-
-def strip_mpe_metadata():
-    """发布包里不需要编辑器元数据（里面有开发机的绝对路径），打包时剥掉。"""
-    pipeline_dir = install_path / "resource" / "pipeline"
-    if not pipeline_dir.exists():
-        return
-    for json_file in sorted(pipeline_dir.glob("*.json")):
-        with open(json_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        with open(json_file, "w", encoding="utf-8") as f:
-            json.dump(_strip_mpe_keys(data), f, ensure_ascii=False, indent=4)
-            f.write("\n")
-        print(f"  Stripped MPE metadata: {json_file.name}")
-
-
 if __name__ == "__main__":
     install_deps()
     install_resource()
-    strip_mpe_metadata()
     install_chores()
     install_agent()
 
