@@ -19,10 +19,7 @@
         "action": {
             "type": "Custom",
             "param": {
-                "custom_action": "CampaignInit",
-                "custom_action_param": {
-                    "send_help": "false"
-                }
+                "custom_action": "CampaignInit"
             }
         },
         "next": [
@@ -33,7 +30,9 @@
                 "x": 12,
                 "y": 2157
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpChat": {
         "action": {
@@ -56,7 +55,9 @@
                 "x": 2652,
                 "y": 666
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpChat_1080": {
         "action": {
@@ -79,7 +80,9 @@
                 "x": 2652,
                 "y": 339
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpChat_550": {
         "action": {
@@ -102,7 +105,9 @@
                 "x": 2652,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild1": {
         "action": {
@@ -125,7 +130,9 @@
                 "x": 2972,
                 "y": 666
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild1_1080": {
         "action": {
@@ -148,7 +155,9 @@
                 "x": 2972,
                 "y": 339
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild1_550": {
         "action": {
@@ -171,7 +180,9 @@
                 "x": 2972,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild2": {
         "action": {
@@ -194,7 +205,9 @@
                 "x": 3292,
                 "y": 666
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild2_1080": {
         "action": {
@@ -217,7 +230,9 @@
                 "x": 3292,
                 "y": 339
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpGuild2_550": {
         "action": {
@@ -240,7 +255,9 @@
                 "x": 3292,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignHelpSend": {
         "action": {
@@ -257,30 +274,85 @@
                 "x": 3612,
                 "y": 377
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
-    "CampaignNormalEntry": {
-        "action": {
-            "type": "Click",
+    "CampaignTownEntry": {
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    551,
-                    1071,
-                    1,
-                    1
+                "roi": [
+                    60,
+                    1170,
+                    200,
+                    110
+                ],
+                "template": [
+                    "town_stage_entry_720p.png"
+                ],
+                "threshold": [
+                    0.85
                 ]
             }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2500,
+        "next": [
+            "CampaignPhantomEntry"
+        ],
+        "on_error": [
+            "CampaignTownEntryRetry1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 92,
+                "y": 2135
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
+    },
+    "CampaignNormalEntry": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1020,
+                    300,
+                    140
+                ],
+                "template": [
+                    "normal_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
         },
         "post_delay": 2500,
         "next": [
             "OpenRecommended"
+        ],
+        "on_error": [
+            "CampaignNormalEntryRetry1"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 332,
                 "y": 2462
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
     },
     "CampaignNormalEntry_1080": {
         "action": {
@@ -298,12 +370,17 @@
         "next": [
             "OpenRecommended_1080"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 12,
                 "y": 1557
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignNormalEntry_550": {
         "action": {
@@ -321,35 +398,55 @@
         "next": [
             "OpenRecommended_550"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1852,
                 "y": 1557
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignPhantomEntry": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    190,
-                    1071,
-                    1,
-                    1
+                "roi": [
+                    60,
+                    1020,
+                    340,
+                    140
+                ],
+                "template": [
+                    "phantom_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.85
                 ]
             }
+        },
+        "action": {
+            "type": "Click"
         },
         "post_delay": 2500,
         "next": [
             "OpenRecommended"
+        ],
+        "on_error": [
+            "CampaignPhantomEntryRetry1"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 332,
                 "y": 2135
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
     },
     "CampaignPhantomEntry_1080": {
         "action": {
@@ -367,12 +464,17 @@
         "next": [
             "OpenRecommended_1080"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 12,
                 "y": 1230
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignPhantomEntry_550": {
         "action": {
@@ -390,36 +492,33 @@
         "next": [
             "OpenRecommended_550"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1852,
                 "y": 1230
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "CampaignStop": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignAbort"
+            }
+        },
         "$__mpe_code": {
             "position": {
                 "x": 3932,
                 "y": 409
             }
-        }
-    },
-    "CampaignStop_1080": {
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
-            }
-        }
-    },
-    "CampaignStop_550": {
-        "$__mpe_code": {
-            "position": {
-                "x": 252,
-                "y": 12
-            }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "DefeatIndicator": {
         "recognition": {
@@ -431,8 +530,12 @@
                     720,
                     251
                 ],
-                "template": "defeat_indicator_720p.png",
-                "threshold": 0.6
+                "template": [
+                    "defeat_indicator_720p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -441,7 +544,12 @@
                 "x": 1692,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleDefeat"
+        ]
     },
     "DefeatIndicator_1080": {
         "recognition": {
@@ -453,8 +561,12 @@
                     678,
                     209
                 ],
-                "template": "defeat_indicator_1080p.png",
-                "threshold": 0.6
+                "template": [
+                    "defeat_indicator_1080p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -463,7 +575,12 @@
                 "x": 1212,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleDefeat_1080"
+        ]
     },
     "DefeatIndicator_550": {
         "recognition": {
@@ -475,8 +592,12 @@
                     550,
                     251
                 ],
-                "template": "defeat_indicator_550p.png",
-                "threshold": 0.6
+                "template": [
+                    "defeat_indicator_550p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -485,7 +606,94 @@
                 "x": 1932,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleDefeat_550"
+        ]
+    },
+    "BattleRetry": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    300,
+                    1130,
+                    420,
+                    150
+                ],
+                "template": [
+                    "retry_button_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "BattleRetryRetry1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 1824
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
+    },
+    "BattleRetry_1080": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1197,
+                    1024,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended_1080"
+        ],
+        "on_error": [
+            "CampaignRecover"
+        ],
+        "pre_delay": 0,
+        "rate_limit": 200
+    },
+    "BattleRetry_550": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    395,
+                    933,
+                    1,
+                    1
+                ]
+            }
+        },
+        "post_delay": 1500,
+        "next": [
+            "OpenRecommended_550"
+        ],
+        "on_error": [
+            "CampaignRecover"
+        ],
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "HandleDefeat": {
         "action": {
@@ -503,7 +711,9 @@
                 "x": 332,
                 "y": 1824
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "HandleDefeat_1080": {
         "action": {
@@ -521,7 +731,9 @@
                 "x": 12,
                 "y": 919
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "HandleDefeat_550": {
         "action": {
@@ -539,7 +751,47 @@
                 "x": 1852,
                 "y": 919
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
+    },
+    "VictoryChallenge": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1120,
+                    300,
+                    160
+                ],
+                "template": [
+                    "victory_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "VictoryChallengeRetry1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 2048
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
     },
     "HandleVictory": {
         "action": {
@@ -548,13 +800,15 @@
                 "custom_action": "CampaignResetFormation"
             }
         },
-        "post_delay": 2000,
+        "post_delay": 1000,
         "$__mpe_code": {
             "position": {
                 "x": 492,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "HandleVictory_1080": {
         "action": {
@@ -563,13 +817,15 @@
                 "custom_action": "CampaignResetFormation"
             }
         },
-        "post_delay": 2000,
+        "post_delay": 1000,
         "$__mpe_code": {
             "position": {
                 "x": 732,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "HandleVictory_550": {
         "action": {
@@ -578,42 +834,90 @@
                 "custom_action": "CampaignResetFormation"
             }
         },
-        "post_delay": 2000,
+        "post_delay": 1000,
         "$__mpe_code": {
             "position": {
                 "x": 972,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "OpenRecommended": {
         "recognition": {
             "type": "TemplateMatch",
             "param": {
                 "roi": [
-                    111,
-                    1128,
-                    178,
-                    135
+                    80,
+                    1080,
+                    260,
+                    200
                 ],
                 "template": [
-                    "Recommended_720p.png"
+                    "clearance_formation_720p.png"
+                ],
+                "threshold": [
+                    0.85
                 ]
             }
         },
         "action": {
             "type": "Click"
         },
-        "post_delay": 2000,
+        "post_delay": 500,
         "next": [
-            "TryFormation"
+            "RecommendedPanel"
+        ],
+        "on_error": [
+            "OpenRecommendedRetry1"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 652,
                 "y": 2142
             }
-        }
+        },
+        "pre_delay": 1200,
+        "rate_limit": 200,
+        "timeout": 4000
+    },
+    "RecommendedPanel": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    200,
+                    960,
+                    380,
+                    180
+                ],
+                "template": [
+                    "recommended_apply_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": [
+            "TryFormation"
+        ],
+        "on_error": [
+            "CampaignRecover"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 1620
+            }
+        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 200
     },
     "OpenRecommended_1080": {
         "recognition": {
@@ -627,22 +931,30 @@
                 ],
                 "template": [
                     "Recommended_1080p.png"
+                ],
+                "threshold": [
+                    0.8
                 ]
             }
         },
         "action": {
             "type": "Click"
         },
-        "post_delay": 2000,
+        "post_delay": 500,
         "next": [
             "TryFormation_1080"
+        ],
+        "on_error": [
+            "CampaignRecover"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 332,
                 "y": 1230
             }
-        }
+        },
+        "pre_delay": 1200,
+        "rate_limit": 200
     },
     "OpenRecommended_550": {
         "recognition": {
@@ -656,47 +968,67 @@
                 ],
                 "template": [
                     "Recommended_550p.png"
+                ],
+                "threshold": [
+                    0.8
                 ]
             }
         },
         "action": {
             "type": "Click"
         },
-        "post_delay": 2000,
+        "post_delay": 500,
         "next": [
             "TryFormation_550"
+        ],
+        "on_error": [
+            "CampaignRecover"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 2172,
                 "y": 1230
             }
-        }
+        },
+        "pre_delay": 1200,
+        "rate_limit": 200
     },
     "StartBattle": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    607,
-                    1193,
-                    1,
-                    1
+                "roi": [
+                    480,
+                    1120,
+                    240,
+                    150
+                ],
+                "template": [
+                    "battle_button_720p.png"
+                ],
+                "threshold": [
+                    0.85
                 ]
             }
         },
-        "repeat": 3,
-        "repeat_delay": 500,
-        "post_delay": 2000,
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000,
         "next": [
             "WaitBattleEnd"
+        ],
+        "on_error": [
+            "CampaignRecover"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1612,
                 "y": 2142
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "StartBattle_1080": {
         "action": {
@@ -716,12 +1048,17 @@
         "next": [
             "WaitBattleEnd_1080"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1292,
                 "y": 1237
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "StartBattle_550": {
         "action": {
@@ -741,12 +1078,17 @@
         "next": [
             "WaitBattleEnd_550"
         ],
+        "on_error": [
+            "CampaignRecover"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 3132,
                 "y": 1237
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "TryFormation": {
         "action": {
@@ -767,7 +1109,9 @@
                 "x": 972,
                 "y": 2157
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "TryFormation_1080": {
         "action": {
@@ -788,7 +1132,9 @@
                 "x": 652,
                 "y": 1252
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "TryFormation_550": {
         "action": {
@@ -809,21 +1155,32 @@
                 "x": 2492,
                 "y": 1252
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "UseFormation": {
-        "action": {
-            "type": "Click",
+        "recognition": {
+            "type": "TemplateMatch",
             "param": {
-                "target": [
-                    424,
-                    1054,
-                    1,
-                    1
+                "roi": [
+                    200,
+                    960,
+                    380,
+                    180
+                ],
+                "template": [
+                    "recommended_apply_720p.png"
+                ],
+                "threshold": [
+                    0.85
                 ]
             }
         },
-        "post_delay": 1000,
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 300,
         "next": [
             "StartBattle"
         ],
@@ -832,7 +1189,13 @@
                 "x": 1292,
                 "y": 2142
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 2000,
+        "on_error": [
+            "UseFormationRetry1"
+        ]
     },
     "UseFormation_1080": {
         "action": {
@@ -855,7 +1218,9 @@
                 "x": 972,
                 "y": 1237
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "UseFormation_550": {
         "action": {
@@ -878,7 +1243,9 @@
                 "x": 2812,
                 "y": 1237
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
     },
     "VictoryIndicator": {
         "recognition": {
@@ -890,8 +1257,12 @@
                     720,
                     268
                 ],
-                "template": "victory_indicator_720p.png",
-                "threshold": 0.6
+                "template": [
+                    "victory_indicator_720p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -900,7 +1271,12 @@
                 "x": 2172,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleVictory"
+        ]
     },
     "VictoryIndicator_1080": {
         "recognition": {
@@ -912,8 +1288,12 @@
                     1009,
                     314
                 ],
-                "template": "victory_indicator_1080p.png",
-                "threshold": 0.6
+                "template": [
+                    "victory_indicator_1080p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -922,7 +1302,12 @@
                 "x": 1452,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleVictory_1080"
+        ]
     },
     "VictoryIndicator_550": {
         "recognition": {
@@ -934,8 +1319,12 @@
                     550,
                     251
                 ],
-                "template": "victory_indicator_550p.png",
-                "threshold": 0.6
+                "template": [
+                    "victory_indicator_550p.png"
+                ],
+                "threshold": [
+                    0.6
+                ]
             }
         },
         "timeout": 1000,
@@ -944,15 +1333,25 @@
                 "x": 2412,
                 "y": 12
             }
-        }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "next": [
+            "HandleVictory_550"
+        ]
     },
     "WaitBattleEnd": {
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "WaitForBattleEnd"
-            }
-        },
+        "next": [
+            "VictoryIndicator",
+            "DefeatIndicator"
+        ],
+        "timeout": 300000,
+        "rate_limit": 3000,
+        "pre_delay": 0,
+        "post_delay": 0,
+        "on_error": [
+            "CampaignStop"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1932,
@@ -961,12 +1360,17 @@
         }
     },
     "WaitBattleEnd_1080": {
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "WaitForBattleEnd"
-            }
-        },
+        "next": [
+            "VictoryIndicator_1080",
+            "DefeatIndicator_1080"
+        ],
+        "timeout": 300000,
+        "rate_limit": 3000,
+        "pre_delay": 0,
+        "post_delay": 0,
+        "on_error": [
+            "CampaignStop"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1612,
@@ -975,17 +1379,571 @@
         }
     },
     "WaitBattleEnd_550": {
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "WaitForBattleEnd"
-            }
-        },
+        "next": [
+            "VictoryIndicator_550",
+            "DefeatIndicator_550"
+        ],
+        "timeout": 300000,
+        "rate_limit": 3000,
+        "pre_delay": 0,
+        "post_delay": 0,
+        "on_error": [
+            "CampaignStop"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 3452,
                 "y": 1286
             }
         }
+    },
+    "CampaignRecover": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "CampaignRecover"
+            }
+        },
+        "post_delay": 500,
+        "$__mpe_code": {
+            "position": {
+                "x": 3932,
+                "y": 700
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200
+    },
+    "OpenRecommendedRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    80,
+                    1080,
+                    260,
+                    200
+                ],
+                "template": [
+                    "clearance_formation_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "RecommendedPanel"
+        ],
+        "on_error": [
+            "OpenRecommendedRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 2362
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
+    },
+    "OpenRecommendedRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    80,
+                    1080,
+                    260,
+                    200
+                ],
+                "template": [
+                    "clearance_formation_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "RecommendedPanel"
+        ],
+        "on_error": [
+            "RecommendedPanel"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 2582
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 4000
+    },
+    "UseFormationRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    200,
+                    960,
+                    380,
+                    180
+                ],
+                "template": [
+                    "recommended_apply_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "StartBattle"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 2362
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 2000,
+        "on_error": [
+            "UseFormationRetry2"
+        ]
+    },
+    "UseFormationRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    200,
+                    960,
+                    380,
+                    180
+                ],
+                "template": [
+                    "recommended_apply_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "StartBattle"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 2582
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 2000,
+        "on_error": [
+            "StartBattle"
+        ]
+    },
+    "CampaignTownEntryRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    60,
+                    1170,
+                    200,
+                    110
+                ],
+                "template": [
+                    "town_stage_entry_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "CampaignPhantomEntry"
+        ],
+        "on_error": [
+            "CampaignTownEntryRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 92,
+                "y": 2135
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "CampaignTownEntryRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    60,
+                    1170,
+                    200,
+                    110
+                ],
+                "template": [
+                    "town_stage_entry_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "CampaignPhantomEntry"
+        ],
+        "on_error": [
+            "CampaignPhantomEntry"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 92,
+                "y": 2135
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "CampaignPhantomEntryRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    60,
+                    1020,
+                    340,
+                    140
+                ],
+                "template": [
+                    "phantom_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "CampaignPhantomEntryRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2135
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "CampaignPhantomEntryRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    60,
+                    1020,
+                    340,
+                    140
+                ],
+                "template": [
+                    "phantom_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2135
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "CampaignNormalEntryRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1020,
+                    300,
+                    140
+                ],
+                "template": [
+                    "normal_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "CampaignNormalEntryRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2462
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "CampaignNormalEntryRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1020,
+                    300,
+                    140
+                ],
+                "template": [
+                    "normal_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 2462
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "VictoryChallengeRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1120,
+                    300,
+                    160
+                ],
+                "template": [
+                    "victory_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "VictoryChallengeRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 2048
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "VictoryChallengeRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    420,
+                    1120,
+                    300,
+                    160
+                ],
+                "template": [
+                    "victory_challenge_720p.png"
+                ],
+                "threshold": [
+                    0.8
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 2048
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "BattleRetryRetry1": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    300,
+                    1130,
+                    420,
+                    150
+                ],
+                "template": [
+                    "retry_button_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "BattleRetryRetry2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 1824
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
+    },
+    "BattleRetryRetry2": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    300,
+                    1130,
+                    420,
+                    150
+                ],
+                "template": [
+                    "retry_button_720p.png"
+                ],
+                "threshold": [
+                    0.85
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 500,
+        "next": [
+            "OpenRecommended"
+        ],
+        "on_error": [
+            "OpenRecommended"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 96,
+                "y": 1824
+            }
+        },
+        "pre_delay": 0,
+        "rate_limit": 200,
+        "timeout": 3000
     }
 }
