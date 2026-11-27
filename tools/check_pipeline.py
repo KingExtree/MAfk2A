@@ -16,6 +16,7 @@
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -35,8 +36,10 @@ REQUIRED_NODES = ("AutoCampaign", "CampaignStop", "CampaignRecover")
 
 
 def node_suffix(name: str) -> str:
+    # 重试镜像节点（xxx_1080Retry1）属于同一分辨率家族，先剥掉 Retry 尾巴再判断
+    core = re.sub(r"Retry\d+$", "", name)
     for suffix in RESOLUTION_SUFFIXES:
-        if name.endswith(suffix):
+        if core.endswith(suffix):
             return suffix
     return ""
 
@@ -117,19 +120,19 @@ def check_references(nodes, errors):
 
 
 def check_parity(nodes, errors):
+    """只要求"带后缀的节点有对应的基础版"。
+
+    550×978 现在归一化到 720×1280 的识别空间（同一套模板、同一套坐标），
+    所以不再要求 `_550` 与 `_1080` 成对；历史遗留的 `_550` 节点只是还没删。
+    """
     for name in nodes:
         suffix = node_suffix(name)
         if not suffix:
             continue
-        base = name[: -len(suffix)]
+        base = re.sub(r"Retry\d+$", "", name)
+        base = base[: -len(suffix)]
         if base not in nodes:
             errors.append(f"{name}: 缺少不带后缀的基础节点 {base}")
-        for other in RESOLUTION_SUFFIXES:
-            if other == suffix:
-                continue
-            sibling = base + other
-            if sibling not in nodes:
-                errors.append(f"{name}: 缺少对应的 {sibling}")
 
 
 def check_geometry(nodes, errors):

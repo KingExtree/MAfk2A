@@ -121,7 +121,7 @@ class PlanAfterDefeatTest(unittest.TestCase):
 
 class CoordsTest(unittest.TestCase):
     def setUp(self):
-        coords.set_resolution(*coords.DEFAULT_RESOLUTION)
+        coords.set_orientation("portrait")
 
     tearDown = setUp
 

@@ -212,7 +212,7 @@ class CampaignInit(CustomAction):
         _retry_limit = campaign_state.parse_retry_limit(attach.get("retry", "0"))
 
         # 读取全局分辨率选项，切换坐标 & task 后缀
-        res_key = str(attach.get("resolution", "720x1280"))
+        res_key = str(attach.get("resolution", "portrait"))
         coords.set_resolution_by_key(res_key)
         _RES_SUFFIX = coords.suffix_for(res_key)
 
@@ -236,28 +236,31 @@ class CampaignInit(CustomAction):
 
         entry = _entry_node(_campaign_state["mode"])
 
-        # 两种起始页面都能接上，靠的是 next 的**候选列表**：
-        #   · 主界面（左下角「先锋关卡」）→ CampaignTownEntry 命中 → 点它进关卡页 → 再走 entry
-        #   · 已经在关卡页（有幻灵挑战/挑战）→ TownEntry 不命中，框架在同一轮里试 entry
+        # 720 / 550（归一化后共用 720）与 1080 三套都有「先锋关卡」入口模板，
+        # 所以两种起始页面统一用候选列表：主界面 → town 命中 → 点它进关卡页 →
+        # 它自己的 next 走 entry；已经在关卡页 → town 不命中，框架在同一轮里试 entry。
         # 注意：不能指望 TownEntry 识别失败后走它自己的 on_error——经过 next 进入的节点
         # 识别失败只会让框架重试整个候选列表，直到父节点超时（实测 20 秒毫无反应）。
-        if _RES_SUFFIX == "":
-            # TownEntry 的重试节点也要指向同一个入口，否则普通模式会串到幻灵去。
-            # Retry2 是重试链的尾巴，失败后要落到「下一屏」而不是 CampaignRecover：
-            # 点成功后「先锋关卡」按钮就没了，重试识别必然失败，此时说明已经进了关卡页。
-            town = _task("CampaignTownEntry")
-            context.override_pipeline({
-                town: {"next": [_task(entry)]},
-                f"{town}Retry1": {"next": [_task(entry)]},
-                f"{town}Retry2": {
-                    "next": [_task(entry)],
-                    "on_error": [_task(entry)],
-                },
-            })
-            context.override_next(argv.node_name, [town, entry])
-        else:
-            # 550/1080 没有「先锋关卡」模板，仍按老路子直接进口节点
-            context.override_next(argv.node_name, [entry])
+        # entry 本身已经带分辨率后缀（_entry_node 里走过 _task），这里不能再套 _task。
+        # 直接拼后缀，不经过 _task——_task 只加档位/形态之类的修饰，
+        # 拼错名字会让框架报 "invalid node id" 而不是报"模板找不到"。
+        town = "CampaignTownEntry" + _RES_SUFFIX
+        # 名字一旦拼错，框架会把不存在的候选**静默丢掉**，日志里只剩
+        # [list=[{... CampaignPhantomEntry_1080}]]，看起来像"没反应"。
+        # 所以把实际用的名字打到 interface 日志里，出问题时一眼能对上。
+        print(f"[CampaignInit] 候选节点={[town, entry]} 后缀={_RES_SUFFIX!r}")
+        # TownEntry 的重试节点也要指向同一个入口，否则普通模式会串到幻灵去。
+        # Retry2 是重试链的尾巴，失败后要落到「下一屏」而不是 CampaignRecover：
+        # 点成功后「先锋关卡」按钮就没了，重试识别必然失败，此时说明已经进了关卡页。
+        context.override_pipeline({
+            town: {"next": [entry]},
+            f"{town}Retry1": {"next": [entry]},
+            f"{town}Retry2": {
+                "next": [entry],
+                "on_error": [entry],
+            },
+        })
+        context.override_next(argv.node_name, [town, entry])
 
         print(
             f"[CampaignInit] 分辨率={res_key}（工作空间 {coords.get_current_resolution()[0]}x{coords.get_current_resolution()[1]}）"
@@ -307,11 +310,11 @@ class CampaignResetFormation(CustomAction):
         # 注意：等结算走完的 6 秒放在 HandleVictory 节点的 post_delay 里，不能在这里 sleep——
         # agent 侧自定义动作有 5 秒响应超时（Transceiver timeout_=5000ms），
         # 超过就会被判 socket is not alive → Node.Action.Failed → Tasker.Task.Failed。
-        if _RES_SUFFIX == "":
-            context.override_next(argv.node_name, [_task("VictoryChallenge")])
-        else:
-            # 550×978 也跟着走 ""（截图已归一化），只有 1080 横屏没有模板
-            context.override_next(argv.node_name, [_entry_node(mode)])
+        # 720 / 550 / 1080 三套现在都有「挑战」模板（victory_challenge_*.png），
+        # 统一走 VictoryChallenge：识别到结算页那颗绿色「挑战」就点它进下一关。
+        # 之前 1080 走的是 _entry_node()——那是**关卡页**的入口模板，结算页上认不出来，
+        # 于是父节点 20 秒超时，表现就是「通关后卡住」。
+        context.override_next(argv.node_name, [_task("VictoryChallenge")])
         return True
 
 

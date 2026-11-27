@@ -437,3 +437,82 @@ context.tasker.controller.set_screenshot_target_long_side(1280)
 
 通用规则（比"裁掉会变的东西"更进一步）：**模板必须完整落在按钮内部，并且四周留出容错边距**。这样即使点击点相对命中框中心有 ±20 px 的系统性偏差（本项目的 Win32 点击就有这个现象），也仍然落在按钮上。
 
+## 十、1920×1080 横屏：另起一套，不与 720 共用模板
+
+### 10.1 先测清楚：1080 是**真横屏 UI**，不是竖屏 letterbox
+
+早先 1280×720 那次（`log_20260825_221853`）游戏把竖屏内容用黑边塞进横屏窗口，导致 `failed to get target rect`。这次把客户端调到 1920×1080 后实测是**另一种情况**：整屏都是游戏内容，UI 重新排版过——底栏在正中、先锋关卡在左下、世界在右下。
+
+所以 1080 **不能**复用 720 的模板，也不能靠缩放模板凑合（`TemplateMatch` 没有尺度参数）。`_1080` 那 14 个盲点节点是逐个换成真机模板重建的。
+
+窗口几何（`ctypes` + `EnumWindows` / `GetClientRect` / `ClientToScreen`，开头先 `SetProcessDpiAwarenessContext(-4)`）：hwnd 会变、窗口位置每次启动都会变，但**客户区恒为 1920×1080**，所以模板与客户区坐标一一对应，不需要跟着窗口位置改。
+
+### 10.2 九张 1080 模板
+
+客户端坐标，与 `campaign.json` 里的 ROI 同一坐标系：
+
+| 模板 | 尺寸 | 位置 | 用途 |
+|---|---|---|---|
+| `town_stage_entry_1080p.png` | 82×20 | (30,1034) | 主界面左下「先锋关卡」 |
+| `phantom_challenge_1080p.png` | 130×40 | (655,890) | 关卡页「幻灵挑战」 |
+| `normal_challenge_1080p.png` | 105×42 | (1195,888) | 关卡页「挑战」 |
+| `clearance_formation_1080p.png` | 87×84 | (545,958) | 准备界面「通关阵容」 |
+| `start_battle_1080p.png` | 130×48 | (1215,968) | 准备界面绿色「战斗」 |
+| `recommended_apply_1080p.png` | 158×52 | (940,864) | 推荐阵容弹窗「一键采用」 |
+| `recommended_next_1080p.png` | 52×52 | (1188,556) | 弹窗右侧 ▶ 翻页箭头 |
+| `victory_challenge_1080p.png` | 90×40 | (1135,994) | 结算页绿色「挑战」 |
+| `retry_button_1080p.png` | 150×50 | (1118,1012) | 战败页「再次挑战」 |
+
+取证方法：游戏必须在前台，用 `mcp__windows__Screenshot(region=客户区)` 截 1:1 帧，再用 `tools/make_template.py` 裁。**这个 Unity 窗口不支持 `PrintWindow`**（`GetLastError()=5`），后台抓图只会拿到被遮挡的桌面；进入关卡瞬间还有黑色斜线转场，要等 2~3 s 再截。
+
+### 10.3 移植时踩到的五个坑（都是"720 有、1080 漏了"）
+
+1. **候选列表少一项**：`CampaignInit` 里用 `[_task("CampaignTownEntry"), entry]` 才支持"主界面/关卡页"两种起步；1080 早期只走了 `entry`，主界面起步时 20 秒空转到超时，表现是"点了没反应"。
+2. **`VictoryChallenge_1080` 不存在**：720 的 `VictoryChallenge` 是后来才加的，1080 没跟着建，而 `_task("VictoryChallenge")` 在 1080 下会拼出这个名字 → 断链。
+3. **`CampaignResetFormation` 的分支**：原来 1080 走 `_entry_node(mode)`（关卡页入口模板），在结算页上认不出来 → 通关后卡住。现在三种分辨率统一走 `VictoryChallenge`。
+4. **弹窗锚点漏配**：`OpenRecommended_1080.next` 直接写了 `TryFormation_1080`（无识别的 Custom 动作），点空也不会失败 → 重试链根本不触发。必须对齐 720：`next` 指向 `RecommendedPanel_1080`（认「一键采用」），认不出才算这次点击没生效。
+5. **`pre_delay` 漏配**：720 的 `OpenRecommended` 有 `pre_delay: 1200`（进关卡有入场动画，动画期间能识别到按钮但点不动），1080 写成 0 → 必然点空。这条最容易漏，因为它是"数字"不是"结构"。
+
+`tools/compare_families.py` 就是为第 5 类问题写的：逐字段比对 720 与 `_1080` 两个家族（动作类型、识别类型、`next`/`on_error` 的对应关系、`timeout`/`pre_delay`/`post_delay`/`rate_limit`/`repeat`），把"结构没对齐"一次性列出来。
+
+### 10.4 重试链的收敛规则（两个分辨率共用）
+
+```
+主节点 --next(下一屏锚点)--> 成功
+   \--timeout / 识别失败--> Retry1 --> Retry2 --> CampaignRecover
+```
+
+- **点击没生效**（按钮还在）→ 重试节点能重新识别到按钮 → 再点一次；
+- **点击生效了**（按钮消失、页面已切走）→ 重试识别不到 → 落到 `CampaignRecover`。
+
+**链尾绝不能指回祖先节点**（例如 `VictoryChallenge_1080Retry2 → OpenRecommended_1080`），否则框架判 `error handling loop detected`，整个任务瞬间失败。
+
+### 10.5 超时统一为 12 s
+
+除两类例外，所有"点完等下一屏"的节点（主节点与重试节点，720 与 1080 共 44 个）`timeout` 统一 **12000 ms**：
+
+| 节点 | 值 | 为什么不能跟着统一 |
+|---|---|---|
+| `WaitBattleEnd` ×3 | 300000 | 要覆盖最长战斗，12 s 会在战斗中途判失败 |
+| `VictoryIndicator` / `DefeatIndicator` ×6 | 1000 | 是"胜负命中后跳往 HandleVictory/Defeat"的一跳，不是在等界面 |
+
+### 10.6 部署侧还有一个坑：目录联接会被"材料化"
+
+MPE 用**相对路径**加载资源（`MaaResourcePostBundle [path=.]`），所以模板按 `<cwd>/image/` 找、agent 按 `<assets>/agent/main.py` 启动。开发树里靠两个目录联接把真实位置接过去：
+
+```
+image          -> assets/resource/image
+assets/image   -> assets/resource/image
+assets/agent   -> agent
+```
+
+它们一旦被某个工具还原成普通目录，就会留下陈旧副本：模板加载不到（报 `templates or threshold is empty`，其实是"文件没找到"）、agent 跑的是旧代码（**改了代码但完全没有效果**，而且没有任何报错）。
+
+排查一句话：
+
+```bash
+powershell -NoProfile -Command "Get-Item image,assets\image,assets\agent | Select-Object Name,LinkType"
+```
+
+`LinkType` 不是 `Junction` 就是被还原了。修复：`python tools/fix_image_links.py` 重建两个 image 联接；`assets/agent` 需要手动 `New-Item -ItemType Junction -Target <绝对路径>`（用 `..\agent` 会被解析成上一级目录而失败）。
+
